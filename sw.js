@@ -80,7 +80,7 @@ self.addEventListener('fetch', function(event) {
     );
 });
 
-// Background Sync - For offline data
+// Background Sync
 self.addEventListener('sync', function(event) {
     if (event.tag === 'sync-aduan') {
         event.waitUntil(syncAduan());
@@ -88,7 +88,6 @@ self.addEventListener('sync', function(event) {
 });
 
 function syncAduan() {
-    // Logic to sync offline data when back online
     return Promise.resolve();
 }
 
