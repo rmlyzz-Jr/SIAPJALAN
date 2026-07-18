@@ -8,24 +8,91 @@ let isLoggingIn = false;
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 let timPICData = {};
+let deferredPrompt = null;
+let isAppInstalled = false;
 
 // ============================================================
 // SPREADSHEET CONFIGURATION (Google Apps Script Backend URL)
 // ============================================================
-// Ganti dengan URL Web App Google Apps Script Anda
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTAOQvO5pwnTA1hnHc3YPeBLKF9ecJ9ID3CUvI-8GaoqT7Hm82dpvdO9dz7jtnJj6dKA/exec';
+// ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+
+// ============================================================
+// PWA - INSTALL APP HANDLING
+// ============================================================
+// Cek apakah aplikasi sudah terinstall
+window.addEventListener('appinstalled', function(event) {
+    isAppInstalled = true;
+    document.getElementById('installBanner').style.display = 'none';
+    showToast('✅ Aplikasi berhasil diinstall!', 'success');
+});
+
+// Tangkap event beforeinstallprompt
+window.addEventListener('beforeinstallprompt', function(event) {
+    event.preventDefault();
+    deferredPrompt = event;
+    
+    // Tampilkan banner install
+    const installBanner = document.getElementById('installBanner');
+    installBanner.style.display = 'flex';
+    
+    // Cek apakah sudah terinstall
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        installBanner.style.display = 'none';
+        isAppInstalled = true;
+    }
+});
+
+// Fungsi install app
+function installApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function(choiceResult) {
+            if (choiceResult.outcome === 'accepted') {
+                isAppInstalled = true;
+                document.getElementById('installBanner').style.display = 'none';
+                showToast('✅ Aplikasi berhasil diinstall!', 'success');
+            } else {
+                showToast('⚠️ Install dibatalkan', 'warning');
+            }
+            deferredPrompt = null;
+        });
+    } else {
+        showToast('⚠️ Install tidak tersedia. Buka di Chrome untuk install.', 'warning');
+    }
+}
+
+// Fungsi close banner
+function closeInstallBanner() {
+    document.getElementById('installBanner').style.display = 'none';
+    localStorage.setItem('hideInstallBanner', 'true');
+}
+
+// Cek apakah banner pernah ditutup
+if (localStorage.getItem('hideInstallBanner') === 'true') {
+    document.getElementById('installBanner').style.display = 'none';
+}
+
+// Cek mode standalone
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    isAppInstalled = true;
+    document.getElementById('installBanner').style.display = 'none';
+}
 
 // ============================================================
 // INIT - Service Worker Registration (PWA)
 // ============================================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('sw.js')
             .then(function(registration) {
                 console.log('✅ ServiceWorker registered successfully');
+                console.log('Scope:', registration.scope);
             })
             .catch(function(error) {
                 console.log('❌ ServiceWorker registration failed:', error);
+                console.log('URL yang dicoba:', window.location.origin + '/sw.js');
+                // Aplikasi tetap berjalan meskipun SW gagal
             });
     });
 }
