@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SIAP JALAN - Aplikasi Aduan</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0D2F5F">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SIAP JALAN">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ============================================================
+         LOGIN PAGE
+    ============================================================ -->
+    <div id="loginPage">
+        <div class="login-card">
+            <div class="logo">
+                <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="Logo SIAP JALAN">
+                <h1>
+                    <span class="siap">SIAP</span> 
+                    <span class="jalan">JALAN</span>
+                </h1>
+                <p>SISTEM INTEGRASI ADUAN DAN PENANGANAN JALAN</p>
+                <div class="sub">Binamarga</div>
+            </div>
+            
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> 
+                <span id="loginErrorMessage">Username atau password salah!</span>
+            </div>
+            
+            <form class="login-form" id="loginForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-control" id="loginUsername" placeholder="Masukkan username" autofocus>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Masukkan password" onkeydown="if(event.key==='Enter') doLogin()">
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-login" id="loginBtn" onclick="doLogin()">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <span>🔒</span> Gunakan akun yang sudah terdaftar di sistem
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============================================================
+         MAIN APP
+    ============================================================ -->
+    <div id="mainApp" style="display:none;">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo">
+                <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="Logo SIAP JALAN">
+                <div class="brand">
+                    <h1>
+                        <span class="siap">SIAP</span> 
+                        <span class="jalan">JALAN</span>
+                    </h1>
+                    <div class="subtitle">Sistem Integrasi Aduan & Penanganan Jalan</div>
+                </div>
+            </div>
+            <div class="user-info" id="userInfo">
+                <span class="username" id="usernameDisplay">Guest</span>
+                <span class="role-badge" id="roleDisplay">guest</span>
+                <span class="tim-badge" id="timDisplay" style="display:none;"></span>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+        
+        <!-- TABS -->
+        <div class="tabs-container">
+            <div class="tabs" id="tabContainer">
+                <button class="tab-btn active" data-tab="tab1" onclick="switchTab('tab1')" id="tabInput">
+                    <i class="fas fa-plus-circle"></i> Input
+                </button>
+                <button class="tab-btn" data-tab="tab2" onclick="switchTab('tab2')">
+                    <i class="fas fa-list"></i> Daftar Aduan
+                </button>
+                <button class="tab-btn" data-tab="tab3" onclick="switchTab('tab3')">
+                    <i class="fas fa-chart-bar"></i> Dashboard
+                </button>
+                <button class="tab-btn" data-tab="tab4" onclick="switchTab('tab4')" id="tabMaster">
+                    <i class="fas fa-users-cog"></i> Master User
+                </button>
+            </div>
+        </div>
+        
+        <!-- CONTENT -->
+        <div class="content">
+            
+            <!-- ==========================================================
+                 TAB 1 - INPUT ADUAN
+            ========================================================== -->
+            <div class="tab-panel active" id="tab1">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-pen-alt"></i> Form Input Aduan
+                    </div>
+                    
+                    <form id="formAduan" onsubmit="return false;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Tanggal <span class="required">*</span></label>
+                                <input type="date" class="form-control" id="inputTanggal" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Kode Laporan</label>
+                                <input type="text" class="form-control" id="inputKode" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Deskripsi <span class="required">*</span></label>
+                            <textarea class="form-control" id="inputDeskripsi" rows="3" placeholder="Masukkan deskripsi aduan..." required></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Pemohon</label>
+                                <input type="text" class="form-control" id="inputPemohon" placeholder="Nama pemohon">
+                            </div>
+                            <div class="form-group">
+                                <label>Detail Lokasi</label>
+                                <input type="text" class="form-control" id="inputLokasi" placeholder="Alamat lengkap">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Asal Media</label>
+                                <input type="text" class="form-control" id="inputMedia" placeholder="Facebook, WhatsApp, dll">
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" id="inputStatus">
+                                    <option value="Baru">Baru</option>
+                                    <option value="Diproses">Diproses</option>
+                                    <option value="Selesai">Selesai</option>
+                                    <option value="Ditolak">Ditolak</option>
+                                    <option value="Ditunda">Ditunda</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Tim</label>
+                                <select class="form-control" id="inputTim">
+                                    <option value="">Pilih Tim</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>PIC (Person In Charge)</label>
+                                <input type="text" class="form-control" id="inputPIC" placeholder="Nama PIC" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Jadwal</label>
+                                <input type="datetime-local" class="form-control" id="inputJadwal">
+                            </div>
+                            <div class="form-group">
+                                <label>Tindak Lanjut</label>
+                                <input type="text" class="form-control" id="inputTindakLanjut" placeholder="Rencana tindak lanjut">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Keterangan</label>
+                            <textarea class="form-control" id="inputKeterangan" rows="2" placeholder="Catatan tambahan"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Gambar (URL)</label>
+                            <input type="text" class="form-control" id="inputGambar" placeholder="https://example.com/gambar.jpg">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-outline">Reset</button>
+                            <button type="button" class="btn btn-primary" onclick="simpanAduan()">
+                                <i class="fas fa-save"></i> Simpan Aduan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- ==========================================================
+                 TAB 2 - DAFTAR ADUAN
+            ========================================================== -->
+            <div class="tab-panel" id="tab2">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-list-ul"></i> Daftar Aduan
+                        <span style="margin-left:auto;font-size:14px;font-weight:400;color:var(--gray-600);">
+                            <i class="fas fa-file-alt"></i> Total: <span id="totalAduan">0</span>
+                        </span>
+                    </div>
+                    
+                    <div class="filter-bar">
+                        <div class="form-group">
+                            <label>Tanggal Awal</label>
+                            <input type="date" class="form-control" id="filterStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Akhir</label>
+                            <input type="date" class="form-control" id="filterEndDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="filterStatus">
+                                <option value="">Semua</option>
+                                <option value="Baru">Baru</option>
+                                <option value="Diproses">Diproses</option>
+                                <option value="Selesai">Selesai</option>
+                                <option value="Ditolak">Ditolak</option>
+                                <option value="Ditunda">Ditunda</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="filterTimGroup">
+                            <label>Tim</label>
+                            <select class="form-control" id="filterTim">
+                                <option value="">Semua</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:2;">
+                            <label>Cari</label>
+                            <input type="text" class="form-control" id="filterKeyword" placeholder="Cari kode, pemohon, deskripsi..." onkeyup="if(event.key==='Enter') loadAduan()">
+                        </div>
+                        <button class="btn btn-primary" onclick="loadAduan()">
+                            <i class="fas fa-search"></i> Cari
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetFilter()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button class="btn btn-success" onclick="exportData()">
+                            <i class="fas fa-file-excel"></i> Export
+                        </button>
+                        <button class="btn btn-info" onclick="refreshData()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <div id="loadingAduan" class="loading">
+                            <div class="spinner"></div>
+                            <p style="margin-top:15px;">Memuat data...</p>
+                        </div>
+                        <div id="tableContainer" style="display:none;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tanggal</th>
+                                        <th>Kode</th>
+                                        <th>Deskripsi</th>
+                                        <th>Pemohon</th>
+                                        <th>Lokasi</th>
+                                        <th>Status</th>
+                                        <th>Tim</th>
+                                        <th>PIC</th>
+                                        <th>Jadwal</th>
+                                        <th>Tindak Lanjut</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBodyAduan">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ==========================================================
+                 TAB 3 - DASHBOARD
+            ========================================================== -->
+            <div class="tab-panel" id="tab3">
+                <div class="stat-grid" id="statCards">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total Laporan</div>
+                    </div>
+                    <div class="stat-card gold">
+                        <div class="stat-value" id="statBaru">0</div>
+                        <div class="stat-label">Status Baru</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-value" id="statSelesai">0</div>
+                        <div class="stat-label">Selesai</div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-value" id="statDiproses">0</div>
+                        <div class="stat-label">Dalam Proses</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-trophy"></i> Peringkat Tim
+                    </div>
+                    <div id="timRankingContainer">
+                        <div class="loading"><div class="spinner"></div><p>Memuat...</p></div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-calendar-alt"></i> Statistik Bulanan
+                        <div style="margin-left:auto;display:flex;gap:10px;">
+                            <button class="btn btn-sm btn-outline" onclick="prevMonth()"><i class="fas fa-chevron-left"></i></button>
+                            <span style="font-weight:600;color:var(--navy);" id="monthLabel">-</span>
+                            <button class="btn btn-sm btn-outline" onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div id="monthlyStatsContainer">
+                        <div class="loading"><div class="spinner"></div><p>Memuat...</p></div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-clock"></i> Laporan Belum Ditindaklanjuti
+                        <span style="margin-left:auto;font-size:14px;font-weight:400;color:var(--gray-600);">
+                            <i class="fas fa-hourglass-half"></i> Peringkat berdasarkan hari
+                        </span>
+                    </div>
+                    <div id="belumTindakLanjutContainer">
+                        <div class="loading"><div class="spinner"></div><p>Memuat...</p></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ==========================================================
+                 TAB 4 - MASTER USER
+            ========================================================== -->
+            <div class="tab-panel" id="tab4">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-user-plus"></i> Tambah User
+                    </div>
+                    <form id="formUser" onsubmit="return false;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Username <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="inputUserUsername" placeholder="Username" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password <span class="required">*</span></label>
+                                <input type="password" class="form-control" id="inputUserPassword" placeholder="Password" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Role</label>
+                                <select class="form-control" id="inputUserRole" onchange="toggleTimField()">
+                                    <option value="admin">Admin</option>
+                                    <option value="operator">Operator</option>
+                                    <option value="pegawai">Pegawai</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="userTimGroup">
+                                <label>Tim</label>
+                                <select class="form-control" id="inputUserTim">
+                                    <option value="">Pilih Tim</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-outline">Reset</button>
+                            <button type="button" class="btn btn-primary" onclick="simpanUser()">
+                                <i class="fas fa-user-plus"></i> Tambah User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-users"></i> Daftar User
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Tim</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBodyUser">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============================================================
+         MODAL EDIT ADUAN
+    ============================================================ -->
+    <div id="modalEditAduan" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit Aduan</h2>
+                <span class="close" onclick="closeModal('modalEditAduan')">&times;</span>
+            </div>
+            <form id="formEditAduan" onsubmit="return false;">
+                <input type="hidden" id="editKodeLaporan">
+                
+                <div class="form-group">
+                    <label>Kode Laporan</label>
+                    <input type="text" class="form-control" id="editKode" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>Jadwal</label>
+                    <input type="datetime-local" class="form-control" id="editJadwal">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tindak Lanjut</label>
+                    <input type="text" class="form-control" id="editTindakLanjut" placeholder="Rencana tindak lanjut">
+                </div>
+                
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <textarea class="form-control" id="editKeterangan" rows="3" placeholder="Catatan tambahan"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" id="editStatus">
+                        <option value="Baru">Baru</option>
+                        <option value="Diproses">Diproses</option>
+                        <option value="Selesai">Selesai</option>
+                        <option value="Ditolak">Ditolak</option>
+                        <option value="Ditunda">Ditunda</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tim</label>
+                    <select class="form-control" id="editTim">
+                        <option value="">Pilih Tim</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>PIC (Person In Charge)</label>
+                    <input type="text" class="form-control" id="editPIC" readonly placeholder="PIC akan terisi otomatis">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modalEditAduan')">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="updateAduan()">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- ============================================================
+         TOAST
+    ============================================================ -->
+    <div id="toast" style="display:none;" class="toast"></div>
+    
+    <!-- ============================================================
+         SCRIPTS
+    ============================================================ -->
+    <script src="script.js"></script>
+</body>
+</html>
