@@ -13,7 +13,7 @@ let timPICData = {};
 // SPREADSHEET CONFIGURATION (Google Apps Script Backend URL)
 // ============================================================
 // Ganti dengan URL Web App Google Apps Script Anda
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7_247ybKRUhb364uMEg7099RDWGgovQS7orZTWguTSwT_3EUn2ExufezhE1DfBdzd/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTAOQvO5pwnTA1hnHc3YPeBLKF9ecJ9ID3CUvI-8GaoqT7Hm82dpvdO9dz7jtnJj6dKA/exec';
 
 // ============================================================
 // INIT - Service Worker Registration (PWA)
