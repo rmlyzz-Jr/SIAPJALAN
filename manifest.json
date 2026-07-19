@@ -1,5 +1,5 @@
 {
-  "name": "SIAP JALAN - Backup & Monitoring",
+  "name": "SIAP JALAN - Sistem Integrasi Aduan dan Penanganan Jalan",
   "short_name": "SIAP JALAN",
   "description": "Sistem Integrasi Aduan dan Penanganan Jalan - Backup & Monitoring",
   "start_url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec",
@@ -9,45 +9,116 @@
   "theme_color": "#0D2F5F",
   "background_color": "#0D2F5F",
   "categories": ["productivity", "business", "utilities"],
+  
   "icons": [
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any maskable",
+      "description": "Desktop & Splash Screen"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable",
+      "description": "Tablet - iPad, Android Tablet"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable",
+      "description": "Tablet Kecil"
     },
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable",
+      "description": "HP Android - dengan padding 15%"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any",
+      "description": "HP Android - tanpa padding"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any",
+      "description": "iPhone - dengan padding 20%"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "167x167",
+      "type": "image/png",
+      "purpose": "any",
+      "description": "iPhone (iPad mini)"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any",
+      "description": "iPhone (iPad)"
     },
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any",
+      "description": "Tablet Android"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "120x120",
+      "type": "image/png",
+      "purpose": "any",
+      "description": "iPhone (Retina)"
     },
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any",
+      "description": "Smartwatch - Apple Watch, Wear OS"
     },
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any",
+      "description": "Smartwatch Kecil"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any",
+      "description": "Favicon / Shortcut"
     }
   ],
+  
   "screenshots": [
     {
-      "src": "https://via.placeholder.com/1280x720/0D2F5F/FFFFFF?text=SIAP+JALAN",
+      "src": "https://via.placeholder.com/1280x720/0D2F5F/FFFFFF?text=SIAP+JALAN+Dashboard",
       "sizes": "1280x720",
-      "type": "image/png"
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "https://via.placeholder.com/750x1334/0D2F5F/FFFFFF?text=SIAP+JALAN+Mobile",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ],
+  
   "shortcuts": [
     {
       "name": "Input Aduan",
@@ -58,7 +129,8 @@
         {
           "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
           "sizes": "96x96",
-          "type": "image/png"
+          "type": "image/png",
+          "purpose": "any"
         }
       ]
     },
@@ -71,7 +143,8 @@
         {
           "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
           "sizes": "96x96",
-          "type": "image/png"
+          "type": "image/png",
+          "purpose": "any"
         }
       ]
     },
@@ -84,11 +157,27 @@
         {
           "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
           "sizes": "96x96",
-          "type": "image/png"
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    },
+    {
+      "name": "Rekap Pekerjaan",
+      "short_name": "Rekap",
+      "description": "Lihat rekap pekerjaan",
+      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab5",
+      "icons": [
+        {
+          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any"
         }
       ]
     }
   ],
+  
   "related_applications": [],
   "prefer_related_applications": false
 }
