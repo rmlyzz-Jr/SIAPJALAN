@@ -181,7 +181,7 @@
     }
     
     /* ============================================================
-       MAIN APP - IFRAME WRAPPER
+       MAIN APP - FULLSCREEN IFRAME
     ============================================================ */
     #mainApp {
       display: none;
@@ -190,178 +190,23 @@
       width: 100%;
       height: 100vh;
       overflow: hidden;
+      position: relative;
     }
     
     #mainApp.visible {
-      display: flex;
-      flex-direction: column;
+      display: block;
       opacity: 1;
-    }
-    
-    /* ============================================================
-       APP HEADER
-    ============================================================ */
-    .app-header {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-      color: var(--white);
-      padding: 8px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      box-shadow: var(--shadow);
-      flex-shrink: 0;
-      z-index: 100;
-      min-height: 56px;
-    }
-    
-    .app-header .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .app-header .logo img {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--gold);
-      background: var(--white);
-      padding: 2px;
-    }
-    
-    .app-header .logo h1 {
-      font-size: 18px;
-      font-weight: 700;
-    }
-    
-    .app-header .logo h1 .siap {
-      color: var(--gold);
-    }
-    
-    .app-header .logo h1 .jalan {
-      color: var(--white);
-    }
-    
-    .app-header .logo .subtitle {
-      font-size: 8px;
-      font-weight: 300;
-      opacity: 0.8;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
-    /* User Info + Timer Gabung */
-    .user-timer-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.1);
-      padding: 4px 14px 4px 18px;
-      border-radius: 25px;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-    
-    .user-timer-group .user-icon {
-      font-size: 16px;
-      color: var(--gold);
-      margin-right: 2px;
-    }
-    
-    .user-timer-group .user-name {
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--white);
-    }
-    
-    .user-timer-group .divider {
-      width: 1px;
-      height: 20px;
-      background: rgba(255,255,255,0.2);
-      margin: 0 4px;
-    }
-    
-    #sessionTimer {
-      font-size: 12px;
-      color: rgba(255,255,255,0.8);
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-variant-numeric: tabular-nums;
-    }
-    
-    #sessionTimer i {
-      font-size: 11px;
-      opacity: 0.7;
-    }
-    
-    #sessionTimer.warning {
-      color: var(--gold);
-      animation: blink 1s ease-in-out infinite;
-    }
-    
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    
-    /* Status dot */
-    .status-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #4ade80;
-      margin-right: 4px;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-    
-    .status-dot.warning {
-      background: var(--gold);
-    }
-    
-    .btn-logout {
-      background: rgba(255,255,255,0.15);
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 5px 14px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .btn-logout:hover {
-      background: rgba(255,255,255,0.25);
-      transform: scale(1.05);
     }
     
     /* ============================================================
        IFRAME - FULLSCREEN
     ============================================================ */
     #appIframe {
-      flex: 1;
       width: 100%;
+      height: 100vh;
       border: none;
       background: var(--gray-50);
+      display: block;
     }
     
     /* ============================================================
@@ -504,43 +349,130 @@
     }
     
     /* ============================================================
+       TIMER FLOATING DI ATAS IFRAME
+    ============================================================ */
+    #timerFloating {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(13, 47, 95, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-family: 'Inter', sans-serif;
+      pointer-events: none;
+      user-select: none;
+    }
+    
+    #timerFloating.show {
+      display: flex;
+    }
+    
+    #timerFloating .timer-icon {
+      color: var(--gold);
+      font-size: 16px;
+    }
+    
+    #timerFloating .timer-text {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.5px;
+    }
+    
+    #timerFloating .timer-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      margin-left: 4px;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    
+    #timerFloating .timer-dot.warning {
+      background: var(--gold);
+    }
+    
+    #timerFloating .timer-dot.danger {
+      background: var(--danger);
+      animation: pulse-dot 0.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
+    }
+    
+    #timerFloating.warning-mode {
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(245, 180, 0, 0.3);
+    }
+    
+    #timerFloating.danger-mode {
+      border-color: var(--danger);
+      box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+      animation: pulse-border 1s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--danger); }
+      50% { border-color: rgba(220, 53, 69, 0.3); }
+    }
+    
+    /* ============================================================
        RESPONSIVE
     ============================================================ */
     @media (max-width: 768px) {
-      .app-header { padding: 6px 12px; min-height: 48px; }
-      .app-header .logo h1 { font-size: 15px; }
-      .app-header .logo img { width: 30px; height: 30px; }
-      .app-header .logo .subtitle { display: none; }
-      
-      .user-timer-group { 
-        padding: 3px 10px 3px 14px; 
-        gap: 4px;
+      #timerFloating {
+        top: 10px;
+        right: 10px;
+        padding: 5px 14px;
+        font-size: 12px;
+        gap: 6px;
       }
-      .user-timer-group .user-name { font-size: 11px; }
-      .user-timer-group .divider { margin: 0 2px; }
-      #sessionTimer { font-size: 10px; }
-      #sessionTimer i { display: none; }
-      
-      .btn-logout { font-size: 10px; padding: 4px 10px; }
-      .btn-logout span { display: none; }
-      
-      .btn-install-bottom { padding: 12px 24px; font-size: 14px; }
-      .btn-install-bottom i { font-size: 18px; }
+      #timerFloating .timer-icon { font-size: 13px; }
+      #timerFloating .timer-dot { width: 6px; height: 6px; }
       .splash-title { font-size: 28px; }
       .splash-logo { width: 100px; height: 100px; }
       #installOverlay { bottom: 15px; width: 92%; }
-      .btn-install-bottom { width: 100%; justify-content: center; }
+      .btn-install-bottom { 
+        width: 100%; 
+        justify-content: center; 
+        padding: 12px 24px; 
+        font-size: 14px; 
+      }
+      .btn-install-bottom i { font-size: 18px; }
     }
     
     @media (max-width: 480px) {
+      #timerFloating {
+        top: 8px;
+        right: 8px;
+        padding: 4px 10px;
+        font-size: 10px;
+        gap: 4px;
+        border-radius: 15px;
+      }
+      #timerFloating .timer-icon { font-size: 11px; }
+      #timerFloating .timer-dot { width: 5px; height: 5px; }
       .splash-title { font-size: 24px; }
       .splash-logo { width: 80px; height: 80px; }
       .splash-subtitle { font-size: 11px; letter-spacing: 2px; }
-      .btn-install-bottom { padding: 10px 18px; font-size: 13px; }
+      .btn-install-bottom { 
+        padding: 10px 18px; 
+        font-size: 13px;
+        gap: 8px;
+      }
       .btn-install-bottom .install-badge { display: none; }
-      
-      .user-timer-group .user-name { font-size: 10px; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      #sessionTimer { font-size: 9px; }
     }
   </style>
 </head>
@@ -577,7 +509,16 @@
   </div>
   
   <!-- ============================================================
-       TOMBOL INSTALL DI BAWAH LAYAR
+       TIMER FLOATING DI ATAS IFRAME
+  ============================================================ -->
+  <div id="timerFloating">
+    <span class="timer-icon"><i class="fas fa-clock"></i></span>
+    <span class="timer-text" id="timerTextDisplay">30:00</span>
+    <span class="timer-dot" id="timerDot"></span>
+  </div>
+  
+  <!-- ============================================================
+       TOMBOL INSTALL DI BAWAH LOGIN
   ============================================================ -->
   <div id="installOverlay">
     <button class="btn-install-bottom" onclick="installApp()">
@@ -598,41 +539,9 @@
   </div>
   
   <!-- ============================================================
-       MAIN APP
+       MAIN APP - FULLSCREEN IFRAME
   ============================================================ -->
   <div id="mainApp">
-    <header class="app-header">
-      <div class="logo">
-        <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="SIAP JALAN">
-        <div>
-          <h1>
-            <span class="siap">SIAP</span> 
-            <span class="jalan">JALAN</span>
-          </h1>
-          <div class="subtitle">Backup &amp; Monitoring System</div>
-        </div>
-      </div>
-      <div class="header-actions">
-        <!-- User + Timer Gabung dalam 1 group -->
-        <div class="user-timer-group" id="userTimerGroup">
-          <span class="user-icon"><i class="fas fa-user-circle"></i></span>
-          <span class="user-name" id="userNameDisplay">Guest</span>
-          <span class="divider"></span>
-          <span id="sessionTimer">
-            <i class="fas fa-clock"></i> 
-            <span id="timerText">30:00</span>
-          </span>
-          <span class="status-dot" id="statusDot"></span>
-        </div>
-        
-        <button class="btn-logout" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Logout</span>
-        </button>
-      </div>
-    </header>
-    
-    <!-- IFRAME untuk web app -->
     <iframe id="appIframe" 
             src="https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec"
             allow="geolocation; microphone; camera; midi; encrypted-media"
@@ -653,8 +562,88 @@
     let timerInterval = null;
     let isWarningShown = false;
     let isLoggedIn = false;
+    let timerVisible = false;
     
-    // Reset timer
+    // ============================================================
+    // TIMER UI
+    // ============================================================
+    function showTimer() {
+      const timerEl = document.getElementById('timerFloating');
+      timerEl.classList.add('show');
+      timerVisible = true;
+      updateTimerDisplay();
+    }
+    
+    function hideTimer() {
+      const timerEl = document.getElementById('timerFloating');
+      timerEl.classList.remove('show');
+      timerVisible = false;
+    }
+    
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60000);
+      const seconds = Math.floor((timeLeft % 60000) / 1000);
+      const timerText = document.getElementById('timerTextDisplay');
+      timerText.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      
+      const timerEl = document.getElementById('timerFloating');
+      const timerDot = document.getElementById('timerDot');
+      
+      // Reset classes
+      timerEl.classList.remove('warning-mode', 'danger-mode');
+      timerDot.classList.remove('warning', 'danger');
+      
+      if (timeLeft < 60 * 1000) {
+        // Kurang dari 1 menit - DANGER
+        timerEl.classList.add('danger-mode');
+        timerDot.classList.add('danger');
+        if (!isWarningShown) {
+          isWarningShown = true;
+          showToast('⚠️ Sesi akan berakhir dalam 1 menit! Segera lakukan aktivitas.', 'error');
+        }
+      } else if (timeLeft < 5 * 60 * 1000) {
+        // Kurang dari 5 menit - WARNING
+        timerEl.classList.add('warning-mode');
+        timerDot.classList.add('warning');
+        if (!isWarningShown) {
+          isWarningShown = true;
+          showToast('⚠️ Sesi akan berakhir dalam 5 menit! Lakukan aktivitas untuk tetap login.', 'warning');
+        }
+      } else {
+        timerDot.classList.remove('warning', 'danger');
+      }
+      
+      // Kirim update ke iframe via postMessage
+      sendTimerToIframe(timeLeft);
+    }
+    
+    // ============================================================
+    // SEND TIMER TO IFRAME
+    // ============================================================
+    function sendTimerToIframe(timeLeft) {
+      const iframe = document.getElementById('appIframe');
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.postMessage({
+            type: 'TIMER_UPDATE',
+            timeLeft: timeLeft,
+            formatted: formatTime(timeLeft)
+          }, '*');
+        } catch(e) {
+          // Silent fail
+        }
+      }
+    }
+    
+    function formatTime(ms) {
+      const minutes = Math.floor(ms / 60000);
+      const seconds = Math.floor((ms % 60000) / 1000);
+      return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+    
+    // ============================================================
+    // RESET TIMER
+    // ============================================================
     function resetSessionTimer() {
       timeLeft = SESSION_TIMEOUT;
       isWarningShown = false;
@@ -663,32 +652,15 @@
       sessionTimer = setTimeout(handleSessionTimeout, SESSION_TIMEOUT);
     }
     
-    // Update display timer
-    function updateTimerDisplay() {
-      const minutes = Math.floor(timeLeft / 60000);
-      const seconds = Math.floor((timeLeft % 60000) / 1000);
-      const timerText = document.getElementById('timerText');
-      timerText.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      
-      const sessionTimerEl = document.getElementById('sessionTimer');
-      const statusDot = document.getElementById('statusDot');
-      
-      if (timeLeft < 5 * 60 * 1000) {
-        sessionTimerEl.classList.add('warning');
-        statusDot.classList.add('warning');
-        if (!isWarningShown) {
-          isWarningShown = true;
-          showToast('⚠️ Sesi akan berakhir dalam 5 menit! Lakukan aktivitas untuk tetap login.', 'warning');
-        }
-      } else {
-        sessionTimerEl.classList.remove('warning');
-        statusDot.classList.remove('warning');
-      }
-    }
-    
     function handleSessionTimeout() {
       showToast('⏰ Sesi berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.', 'error');
-      logout();
+      hideTimer();
+      const iframe = document.getElementById('appIframe');
+      iframe.src = iframe.src;
+      isLoggedIn = false;
+      setTimeout(() => {
+        document.getElementById('installOverlay').classList.add('show');
+      }, 1000);
     }
     
     function resetInactivityTimer() {
@@ -727,34 +699,26 @@
         const iframe = document.getElementById('appIframe');
         const iframeUrl = iframe.contentWindow.location.href;
         
-        if (iframeUrl.includes('exec') && !iframeUrl.includes('login')) {
+        if (iframeUrl.includes('login') || iframeUrl.includes('Login')) {
+          isLoggedIn = false;
+          document.getElementById('installOverlay').classList.add('show');
+          hideTimer();
+          if (timerInterval) clearInterval(timerInterval);
+          if (sessionTimer) clearTimeout(sessionTimer);
+        } else if (iframeUrl.includes('exec') && !iframeUrl.includes('login')) {
           isLoggedIn = true;
+          document.getElementById('installOverlay').classList.remove('show');
+          showTimer();
           resetSessionTimer();
           startTimerInterval();
-          document.getElementById('installOverlay').classList.remove('show');
-          // Update user name jika bisa
-          updateUserName('User');
-        } else {
-          document.getElementById('installOverlay').classList.add('show');
-          updateUserName('Guest');
         }
       } catch(e) {
+        // Cross-origin - asumsikan sudah login
         isLoggedIn = true;
+        document.getElementById('installOverlay').classList.remove('show');
+        showTimer();
         resetSessionTimer();
         startTimerInterval();
-        document.getElementById('installOverlay').classList.remove('show');
-      }
-    }
-    
-    // ============================================================
-    // UPDATE USER NAME
-    // ============================================================
-    function updateUserName(name) {
-      const userNameEl = document.getElementById('userNameDisplay');
-      if (name && name !== 'Guest') {
-        userNameEl.textContent = name;
-      } else {
-        userNameEl.textContent = 'Guest';
       }
     }
     
@@ -770,21 +734,56 @@
         
         if (iframeUrl.includes('login') || iframeUrl.includes('Login')) {
           document.getElementById('installOverlay').classList.add('show');
-          isLoggedIn = false;
-          updateUserName('Guest');
+          if (isLoggedIn) {
+            isLoggedIn = false;
+            hideTimer();
+            if (timerInterval) clearInterval(timerInterval);
+            if (sessionTimer) clearTimeout(sessionTimer);
+          }
         } else if (iframeUrl.includes('exec') && !iframeUrl.includes('login')) {
           document.getElementById('installOverlay').classList.remove('show');
           if (!isLoggedIn) {
             isLoggedIn = true;
+            showTimer();
             resetSessionTimer();
             startTimerInterval();
-            updateUserName('User');
           }
         }
       } catch(e) {
         // Cross-origin - biarkan
       }
     }
+    
+    // ============================================================
+    // LISTEN MESSAGE FROM IFRAME (Web App)
+    // ============================================================
+    window.addEventListener('message', function(event) {
+      // Terima pesan dari iframe
+      if (event.data && event.data.type === 'REQUEST_TIMER') {
+        // Kirim timer saat ini
+        sendTimerToIframe(timeLeft);
+      }
+      
+      if (event.data && event.data.type === 'LOGIN_SUCCESS') {
+        // Web app memberi tahu login berhasil
+        isLoggedIn = true;
+        document.getElementById('installOverlay').classList.remove('show');
+        showTimer();
+        resetSessionTimer();
+        startTimerInterval();
+      }
+      
+      if (event.data && event.data.type === 'LOGOUT') {
+        // Web app memberi tahu logout
+        isLoggedIn = false;
+        hideTimer();
+        if (timerInterval) clearInterval(timerInterval);
+        if (sessionTimer) clearTimeout(sessionTimer);
+        setTimeout(() => {
+          document.getElementById('installOverlay').classList.add('show');
+        }, 1000);
+      }
+    });
     
     // ============================================================
     // PWA - INSTALLATION
@@ -847,7 +846,7 @@
         document.getElementById('splashScreen').classList.add('hidden');
         
         const mainApp = document.getElementById('mainApp');
-        mainApp.style.display = 'flex';
+        mainApp.style.display = 'block';
         setTimeout(function() {
           mainApp.classList.add('visible');
         }, 100);
@@ -855,7 +854,7 @@
         const iframe = document.getElementById('appIframe');
         iframe.addEventListener('load', handleIframeLoad);
         
-        loginCheckInterval = setInterval(checkLoginState, 3000);
+        loginCheckInterval = setInterval(checkLoginState, 2000);
         
         setTimeout(function() {
           const overlay = document.getElementById('loadingOverlay');
@@ -914,37 +913,22 @@
     }
     
     // ============================================================
-    // LOGOUT
-    // ============================================================
-    function logout() {
-      if (timerInterval) clearInterval(timerInterval);
-      if (sessionTimer) clearTimeout(sessionTimer);
-      if (loginCheckInterval) clearInterval(loginCheckInterval);
-      
-      isLoggedIn = false;
-      
-      const iframe = document.getElementById('appIframe');
-      iframe.src = 'https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec';
-      
-      timeLeft = SESSION_TIMEOUT;
-      updateTimerDisplay();
-      updateUserName('Guest');
-      
-      setTimeout(() => {
-        document.getElementById('installOverlay').classList.add('show');
-      }, 1000);
-      
-      showToast('👋 Anda telah logout', 'info');
-    }
-    
-    // ============================================================
     // KEYBOARD SHORTCUTS
     // ============================================================
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
         e.preventDefault();
         if (confirm('Yakin ingin logout?')) {
-          logout();
+          const iframe = document.getElementById('appIframe');
+          iframe.src = iframe.src;
+          isLoggedIn = false;
+          hideTimer();
+          if (timerInterval) clearInterval(timerInterval);
+          if (sessionTimer) clearTimeout(sessionTimer);
+          setTimeout(() => {
+            document.getElementById('installOverlay').classList.add('show');
+          }, 1000);
+          showToast('👋 Anda telah logout', 'info');
         }
       }
     });
@@ -953,6 +937,7 @@
     console.log('⏱️ Auto logout: 30 menit tidak ada aktivitas');
     console.log('⌨️ Shortcut: Ctrl+Shift+L untuk logout');
     console.log('📱 Klik "Instal SiapJalan" di bawah untuk install PWA');
+    console.log('🔗 Web App: https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec');
   </script>
 </body>
 </html>
