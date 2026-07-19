@@ -1,144 +1,94 @@
 {
-    "name": "SIAP JALAN - Sistem Aduan dan Penanganan Jalan",
-    "short_name": "SIAP JALAN",
-    "description": "Sistem Integrasi Aduan dan Penanganan Jalan - Binamarga",
-    "start_url": "/SIAPJALAN/",
-    "scope": "/SIAPJALAN/",
-    "display": "standalone",
-    "orientation": "portrait",
-    "background_color": "#0D2F5F",
-    "theme_color": "#0D2F5F",
-    "categories": ["productivity", "utilities", "business"],
-    "lang": "id",
-    "dir": "ltr",
-    "prefer_related_applications": false,
-    "related_applications": [],
-    "screenshots": [
-        {
-            "src": "screenshots/screenshot-1.png",
-            "sizes": "1080x1920",
-            "type": "image/png",
-            "platform": "android",
-            "label": "Halaman Login SIAP JALAN"
-        },
-        {
-            "src": "screenshots/screenshot-2.png",
-            "sizes": "1080x1920",
-            "type": "image/png",
-            "platform": "android",
-            "label": "Dashboard SIAP JALAN"
-        }
-    ],
-    "icons": [
-        {
-            "src": "icons/icon-72.png",
-            "sizes": "72x72",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-96.png",
-            "sizes": "96x96",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-128.png",
-            "sizes": "128x128",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-144.png",
-            "sizes": "144x144",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-152.png",
-            "sizes": "152x152",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-384.png",
-            "sizes": "384x384",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        }
-    ],
-    "shortcuts": [
-        {
-            "name": "Input Aduan",
-            "short_name": "Input",
-            "description": "Buka form input aduan",
-            "url": "/SIAPJALAN/?action=input",
-            "icons": [
-                {
-                    "src": "icons/icon-96.png",
-                    "sizes": "96x96",
-                    "type": "image/png"
-                }
-            ]
-        },
-        {
-            "name": "Daftar Aduan",
-            "short_name": "Daftar",
-            "description": "Lihat daftar aduan",
-            "url": "/SIAPJALAN/?action=list",
-            "icons": [
-                {
-                    "src": "icons/icon-96.png",
-                    "sizes": "96x96",
-                    "type": "image/png"
-                }
-            ]
-        },
-        {
-            "name": "Dashboard",
-            "short_name": "Dashboard",
-            "description": "Lihat dashboard statistik",
-            "url": "/SIAPJALAN/?action=dashboard",
-            "icons": [
-                {
-                    "src": "icons/icon-96.png",
-                    "sizes": "96x96",
-                    "type": "image/png"
-                }
-            ]
-        }
-    ],
-    "display_override": ["standalone", "window-controls-overlay"],
-    "handle_links": "preferred",
-    "launch_handler": {
-        "client_mode": ["navigate-existing", "auto"]
+  "name": "SIAP JALAN - Backup & Monitoring",
+  "short_name": "SIAP JALAN",
+  "description": "Sistem Integrasi Aduan dan Penanganan Jalan - Backup & Monitoring",
+  "start_url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0D2F5F",
+  "background_color": "#0D2F5F",
+  "categories": ["productivity", "business", "utilities"],
+  "icons": [
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
-    "edge_side_panel": {
-        "preferred_width": 480
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
-    "share_target": {
-        "action": "/SIAPJALAN/share-target/",
-        "method": "POST",
-        "enctype": "multipart/form-data",
-        "params": {
-            "title": "title",
-            "text": "text",
-            "url": "url"
-        }
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
     },
-    "note_taking": {
-        "new_note_url": "/SIAPJALAN/?action=note"
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "https://via.placeholder.com/1280x720/0D2F5F/FFFFFF?text=SIAP+JALAN",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Input Aduan",
+      "short_name": "Input",
+      "description": "Tambah aduan baru",
+      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab1",
+      "icons": [
+        {
+          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Daftar Aduan",
+      "short_name": "Daftar",
+      "description": "Lihat semua aduan",
+      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab2",
+      "icons": [
+        {
+          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Lihat statistik",
+      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab3",
+      "icons": [
+        {
+          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }
