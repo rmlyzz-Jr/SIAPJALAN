@@ -1,16 +1,74 @@
 {
-    "name": "SIAP JALAN - Sistem Aduan",
+    "name": "SIAP JALAN - Sistem Aduan dan Penanganan Jalan",
     "short_name": "SIAP JALAN",
     "description": "Sistem Integrasi Aduan dan Penanganan Jalan - Binamarga",
-    "start_url": "/",
+    "start_url": "/SIAPJALAN/",
+    "scope": "/SIAPJALAN/",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#0D2F5F",
     "theme_color": "#0D2F5F",
+    "categories": ["productivity", "utilities", "business"],
+    "lang": "id",
+    "dir": "ltr",
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "screenshots": [
+        {
+            "src": "screenshots/screenshot-1.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "platform": "android",
+            "label": "Halaman Login SIAP JALAN"
+        },
+        {
+            "src": "screenshots/screenshot-2.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "platform": "android",
+            "label": "Dashboard SIAP JALAN"
+        }
+    ],
     "icons": [
+        {
+            "src": "icons/icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
         {
             "src": "icons/icon-192.png",
             "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-384.png",
+            "sizes": "384x384",
             "type": "image/png",
             "purpose": "any maskable"
         },
@@ -20,5 +78,67 @@
             "type": "image/png",
             "purpose": "any maskable"
         }
-    ]
+    ],
+    "shortcuts": [
+        {
+            "name": "Input Aduan",
+            "short_name": "Input",
+            "description": "Buka form input aduan",
+            "url": "/SIAPJALAN/?action=input",
+            "icons": [
+                {
+                    "src": "icons/icon-96.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Daftar Aduan",
+            "short_name": "Daftar",
+            "description": "Lihat daftar aduan",
+            "url": "/SIAPJALAN/?action=list",
+            "icons": [
+                {
+                    "src": "icons/icon-96.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Dashboard",
+            "short_name": "Dashboard",
+            "description": "Lihat dashboard statistik",
+            "url": "/SIAPJALAN/?action=dashboard",
+            "icons": [
+                {
+                    "src": "icons/icon-96.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ],
+    "display_override": ["standalone", "window-controls-overlay"],
+    "handle_links": "preferred",
+    "launch_handler": {
+        "client_mode": ["navigate-existing", "auto"]
+    },
+    "edge_side_panel": {
+        "preferred_width": 480
+    },
+    "share_target": {
+        "action": "/SIAPJALAN/share-target/",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    },
+    "note_taking": {
+        "new_note_url": "/SIAPJALAN/?action=note"
+    }
 }
