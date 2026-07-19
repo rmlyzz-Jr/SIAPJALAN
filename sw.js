@@ -1,130 +1,108 @@
 // ============================================================
 // SERVICE WORKER - SIAP JALAN PWA
 // ============================================================
-const CACHE_NAME = 'siap-jalan-v1';
-const ASSETS = [
-    '/',
-    '/index.html',
-    '/style.css',
-    '/script.js',
-    '/manifest.json',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
+
+const CACHE_NAME = 'siapjalan-v2.0';
+const ASSETS_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap',
+  'https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png'
 ];
 
-// Install Event - Cache assets
+// Install Service Worker
 self.addEventListener('install', function(event) {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log('🔧 Cache opened');
-                return cache.addAll(ASSETS);
-            })
-            .then(function() {
-                return self.skipWaiting();
-            })
-    );
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(function(cache) {
+        console.log('📦 Caching assets...');
+        return cache.addAll(ASSETS_TO_CACHE);
+      })
+      .then(function() {
+        return self.skipWaiting();
+      })
+  );
 });
 
-// Activate Event - Clean old caches
+// Activate Service Worker
 self.addEventListener('activate', function(event) {
-    event.waitUntil(
-        caches.keys()
-            .then(function(cacheNames) {
-                return Promise.all(
-                    cacheNames
-                        .filter(function(name) {
-                            return name !== CACHE_NAME;
-                        })
-                        .map(function(name) {
-                            return caches.delete(name);
-                        })
-                );
-            })
-            .then(function() {
-                return self.clients.claim();
-            })
-    );
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            console.log('🗑️ Removing old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+    .then(function() {
+      return self.clients.claim();
+    })
+  );
 });
 
-// Fetch Event - Network first with cache fallback
+// Fetch - Network First with cache fallback
 self.addEventListener('fetch', function(event) {
-    // Skip Google Apps Script requests (dynamic)
-    if (event.request.url.includes('script.google.com')) {
-        return fetch(event.request);
-    }
-    
-    event.respondWith(
-        fetch(event.request)
-            .then(function(response) {
-                // Clone response for caching
-                const responseClone = response.clone();
-                caches.open(CACHE_NAME)
-                    .then(function(cache) {
-                        cache.put(event.request, responseClone);
-                    });
-                return response;
-            })
-            .catch(function() {
-                return caches.match(event.request)
-                    .then(function(cachedResponse) {
-                        if (cachedResponse) {
-                            return cachedResponse;
-                        }
-                        // Return offline fallback
-                        return new Response('Offline - Data tidak tersedia', {
-                            status: 503,
-                            statusText: 'Service Unavailable'
-                        });
-                    });
-            })
-    );
+  event.respondWith(
+    fetch(event.request)
+      .then(function(response) {
+        // Clone response untuk cache
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) {
+          // Cache hanya resource yang valid
+          if (event.request.url.startsWith('http') && 
+              !event.request.url.includes('googleapis.com')) {
+            cache.put(event.request, responseClone);
+          }
+        });
+        return response;
+      })
+      .catch(function() {
+        // Jika offline, ambil dari cache
+        return caches.match(event.request).then(function(cachedResponse) {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          // Fallback untuk halaman
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+          return new Response('Offline - Resource not available', {
+            status: 503,
+            statusText: 'Service Unavailable'
+          });
+        });
+      })
+  );
 });
 
-// Background Sync
-self.addEventListener('sync', function(event) {
-    if (event.tag === 'sync-aduan') {
-        event.waitUntil(syncAduan());
-    }
-});
-
-function syncAduan() {
-    return Promise.resolve();
-}
-
-// Push Notification
+// Handle push notifications (optional)
 self.addEventListener('push', function(event) {
-    const options = {
-        body: event.data ? event.data.text() : 'Ada aduan baru yang perlu ditindaklanjuti!',
-        icon: 'icons/icon-192.png',
-        badge: 'icons/icon-192.png',
-        vibrate: [200, 100, 200],
-        data: {
-            dateOfArrival: Date.now(),
-            primaryKey: 1
-        },
-        actions: [
-            {
-                action: 'open',
-                title: 'Buka Aplikasi'
-            },
-            {
-                action: 'close',
-                title: 'Tutup'
-            }
-        ]
-    };
-    
-    event.waitUntil(
-        self.registration.showNotification('📋 SIAP JALAN', options)
-    );
+  const data = event.data ? event.data.json() : {};
+  const title = data.title || 'SIAP JALAN';
+  const options = {
+    body: data.body || 'Ada pembaruan di aplikasi SIAP JALAN',
+    icon: 'https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png',
+    badge: 'https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png',
+    vibrate: [200, 100, 200],
+    data: data.url || '/'
+  };
+  
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
+// Handle notification click
 self.addEventListener('notificationclick', function(event) {
-    event.notification.close();
-    
-    if (event.action === 'open') {
-        event.waitUntil(
-            clients.openWindow('/')
-        );
-    }
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow(event.notification.data || '/')
+  );
 });
+
+console.log('✅ Service Worker loaded successfully');
