@@ -257,15 +257,52 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    /* User Info + Timer Gabung */
+    .user-timer-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      padding: 4px 14px 4px 18px;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    
+    .user-timer-group .user-icon {
+      font-size: 16px;
+      color: var(--gold);
+      margin-right: 2px;
+    }
+    
+    .user-timer-group .user-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--white);
+    }
+    
+    .user-timer-group .divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,0.2);
+      margin: 0 4px;
     }
     
     #sessionTimer {
       font-size: 12px;
-      color: rgba(255,255,255,0.7);
-      background: rgba(255,255,255,0.1);
-      padding: 4px 12px;
-      border-radius: 12px;
+      color: rgba(255,255,255,0.8);
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    #sessionTimer i {
+      font-size: 11px;
+      opacity: 0.7;
     }
     
     #sessionTimer.warning {
@@ -278,23 +315,24 @@
       50% { opacity: 0.3; }
     }
     
-    /* Tombol Install di Header (akan sembunyi) */
-    #installBtn {
-      display: none;
-      background: var(--gold);
-      color: var(--navy);
-      border: none;
-      padding: 5px 14px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      transition: var(--transition);
+    /* Status dot */
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      margin-right: 4px;
+      animation: pulse-dot 2s ease-in-out infinite;
     }
     
-    #installBtn:hover {
-      transform: scale(1.05);
-      background: var(--gold-light);
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    
+    .status-dot.warning {
+      background: var(--gold);
     }
     
     .btn-logout {
@@ -306,6 +344,9 @@
       cursor: pointer;
       font-size: 12px;
       transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     
     .btn-logout:hover {
@@ -324,9 +365,7 @@
     }
     
     /* ============================================================
-       TOMBOL INSTALL DI BAWAH LOGIN (di dalam iframe)
-       Sebenarnya kita tidak bisa menaruh tombol di dalam iframe,
-       tapi kita bisa menaruhnya sebagai overlay di atas login page
+       TOMBOL INSTALL DI BAWAH LOGIN
     ============================================================ */
     #installOverlay {
       position: fixed;
@@ -472,8 +511,19 @@
       .app-header .logo h1 { font-size: 15px; }
       .app-header .logo img { width: 30px; height: 30px; }
       .app-header .logo .subtitle { display: none; }
-      #sessionTimer { font-size: 10px; padding: 2px 10px; }
+      
+      .user-timer-group { 
+        padding: 3px 10px 3px 14px; 
+        gap: 4px;
+      }
+      .user-timer-group .user-name { font-size: 11px; }
+      .user-timer-group .divider { margin: 0 2px; }
+      #sessionTimer { font-size: 10px; }
+      #sessionTimer i { display: none; }
+      
       .btn-logout { font-size: 10px; padding: 4px 10px; }
+      .btn-logout span { display: none; }
+      
       .btn-install-bottom { padding: 12px 24px; font-size: 14px; }
       .btn-install-bottom i { font-size: 18px; }
       .splash-title { font-size: 28px; }
@@ -488,6 +538,9 @@
       .splash-subtitle { font-size: 11px; letter-spacing: 2px; }
       .btn-install-bottom { padding: 10px 18px; font-size: 13px; }
       .btn-install-bottom .install-badge { display: none; }
+      
+      .user-timer-group .user-name { font-size: 10px; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      #sessionTimer { font-size: 9px; }
     }
   </style>
 </head>
@@ -524,7 +577,7 @@
   </div>
   
   <!-- ============================================================
-       TOMBOL INSTALL DI BAWAH LAYAR (Overlay)
+       TOMBOL INSTALL DI BAWAH LAYAR
   ============================================================ -->
   <div id="installOverlay">
     <button class="btn-install-bottom" onclick="installApp()">
@@ -560,9 +613,21 @@
         </div>
       </div>
       <div class="header-actions">
-        <span id="sessionTimer">⏱️ 30:00</span>
+        <!-- User + Timer Gabung dalam 1 group -->
+        <div class="user-timer-group" id="userTimerGroup">
+          <span class="user-icon"><i class="fas fa-user-circle"></i></span>
+          <span class="user-name" id="userNameDisplay">Guest</span>
+          <span class="divider"></span>
+          <span id="sessionTimer">
+            <i class="fas fa-clock"></i> 
+            <span id="timerText">30:00</span>
+          </span>
+          <span class="status-dot" id="statusDot"></span>
+        </div>
+        
         <button class="btn-logout" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i> Logout
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
         </button>
       </div>
     </header>
@@ -582,7 +647,7 @@
     // ============================================================
     // AUTO LOGOUT - 30 MINUTES INACTIVITY
     // ============================================================
-    const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 menit
+    const SESSION_TIMEOUT = 30 * 60 * 1000;
     let sessionTimer = null;
     let timeLeft = SESSION_TIMEOUT;
     let timerInterval = null;
@@ -602,17 +667,22 @@
     function updateTimerDisplay() {
       const minutes = Math.floor(timeLeft / 60000);
       const seconds = Math.floor((timeLeft % 60000) / 1000);
-      const display = document.getElementById('sessionTimer');
-      display.textContent = `⏱️ ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      const timerText = document.getElementById('timerText');
+      timerText.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      
+      const sessionTimerEl = document.getElementById('sessionTimer');
+      const statusDot = document.getElementById('statusDot');
       
       if (timeLeft < 5 * 60 * 1000) {
-        display.classList.add('warning');
+        sessionTimerEl.classList.add('warning');
+        statusDot.classList.add('warning');
         if (!isWarningShown) {
           isWarningShown = true;
           showToast('⚠️ Sesi akan berakhir dalam 5 menit! Lakukan aktivitas untuk tetap login.', 'warning');
         }
       } else {
-        display.classList.remove('warning');
+        sessionTimerEl.classList.remove('warning');
+        statusDot.classList.remove('warning');
       }
     }
     
@@ -653,23 +723,22 @@
       const overlay = document.getElementById('loadingOverlay');
       overlay.classList.remove('active');
       
-      // Deteksi login dengan memeriksa URL atau konten iframe
       try {
         const iframe = document.getElementById('appIframe');
         const iframeUrl = iframe.contentWindow.location.href;
-        // Cek apakah sudah login (bisa disesuaikan dengan URL setelah login)
+        
         if (iframeUrl.includes('exec') && !iframeUrl.includes('login')) {
           isLoggedIn = true;
           resetSessionTimer();
           startTimerInterval();
-          // Sembunyikan tombol install saat sudah login
           document.getElementById('installOverlay').classList.remove('show');
+          // Update user name jika bisa
+          updateUserName('User');
         } else {
-          // Tampilkan tombol install di halaman login
           document.getElementById('installOverlay').classList.add('show');
+          updateUserName('Guest');
         }
       } catch(e) {
-        // Cross-origin error - asumsikan sudah login
         isLoggedIn = true;
         resetSessionTimer();
         startTimerInterval();
@@ -678,7 +747,19 @@
     }
     
     // ============================================================
-    // DETECT LOGIN STATE - polling setiap 2 detik
+    // UPDATE USER NAME
+    // ============================================================
+    function updateUserName(name) {
+      const userNameEl = document.getElementById('userNameDisplay');
+      if (name && name !== 'Guest') {
+        userNameEl.textContent = name;
+      } else {
+        userNameEl.textContent = 'Guest';
+      }
+    }
+    
+    // ============================================================
+    // DETECT LOGIN STATE
     // ============================================================
     let loginCheckInterval = null;
     
@@ -687,20 +768,21 @@
         const iframe = document.getElementById('appIframe');
         const iframeUrl = iframe.contentWindow.location.href;
         
-        // Cek apakah di halaman login (sesuaikan dengan URL login page)
         if (iframeUrl.includes('login') || iframeUrl.includes('Login')) {
           document.getElementById('installOverlay').classList.add('show');
           isLoggedIn = false;
+          updateUserName('Guest');
         } else if (iframeUrl.includes('exec') && !iframeUrl.includes('login')) {
           document.getElementById('installOverlay').classList.remove('show');
           if (!isLoggedIn) {
             isLoggedIn = true;
             resetSessionTimer();
             startTimerInterval();
+            updateUserName('User');
           }
         }
       } catch(e) {
-        // Cross-origin - biarkan tombol tetap tersembunyi
+        // Cross-origin - biarkan
       }
     }
     
@@ -709,7 +791,6 @@
     // ============================================================
     let deferredPrompt = null;
     
-    // Register Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js')
@@ -722,11 +803,9 @@
       });
     }
     
-    // Install button visibility
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
       deferredPrompt = e;
-      // Tampilkan tombol install
       document.getElementById('installOverlay').classList.add('show');
       console.log('📲 Install prompt available');
     });
@@ -750,7 +829,6 @@
           deferredPrompt = null;
         });
       } else {
-        // Fallback untuk iOS / browser lain
         if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
           document.getElementById('iosPrompt').style.display = 'block';
         } else {
@@ -777,15 +855,12 @@
         const iframe = document.getElementById('appIframe');
         iframe.addEventListener('load', handleIframeLoad);
         
-        // Mulai cek login state
         loginCheckInterval = setInterval(checkLoginState, 3000);
         
-        // Fallback timeout
         setTimeout(function() {
           const overlay = document.getElementById('loadingOverlay');
           if (overlay.classList.contains('active')) {
             overlay.classList.remove('active');
-            // Tampilkan tombol install jika belum loading
             document.getElementById('installOverlay').classList.add('show');
           }
         }, 15000);
@@ -809,9 +884,11 @@
         info: '#17a2b8'
       };
       
+      const isInstallVisible = document.getElementById('installOverlay').classList.contains('show');
+      
       toast.style.cssText = `
         position: fixed;
-        bottom: ${document.getElementById('installOverlay').classList.contains('show') ? '100px' : '30px'};
+        bottom: ${isInstallVisible ? '100px' : '30px'};
         left: 50%;
         transform: translateX(-50%);
         padding: 14px 28px;
@@ -851,8 +928,8 @@
       
       timeLeft = SESSION_TIMEOUT;
       updateTimerDisplay();
+      updateUserName('Guest');
       
-      // Tampilkan tombol install
       setTimeout(() => {
         document.getElementById('installOverlay').classList.add('show');
       }, 1000);
@@ -872,9 +949,6 @@
       }
     });
     
-    // ============================================================
-    // CONSOLE LOG
-    // ============================================================
     console.log('🚀 SIAP JALAN PWA v2.0 loaded!');
     console.log('⏱️ Auto logout: 30 menit tidak ada aktivitas');
     console.log('⌨️ Shortcut: Ctrl+Shift+L untuk logout');
