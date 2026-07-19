@@ -21,7 +21,7 @@
   
   <style>
     /* ============================================================
-       CSS VARIABLES & RESET
+       ALL CSS
     ============================================================ */
     :root {
       --navy: #0D2F5F;
@@ -75,7 +75,7 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      animation: splashFadeOut 3s ease-in-out forwards;
+      animation: splashFadeOut 3.5s ease-in-out forwards;
       animation-delay: 2.5s;
     }
     
@@ -174,65 +174,66 @@
     }
     
     /* ============================================================
-       HIDE SPLASH AFTER ANIMATION
+       HIDE SPLASH
     ============================================================ */
     #splashScreen.hidden {
       display: none;
     }
     
     /* ============================================================
-       MAIN APP (display: none initially)
+       MAIN APP - IFRAME WRAPPER
     ============================================================ */
     #mainApp {
       display: none;
       opacity: 0;
       transition: opacity 0.5s ease;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
     }
     
     #mainApp.visible {
-      display: block;
+      display: flex;
+      flex-direction: column;
       opacity: 1;
     }
     
     /* ============================================================
-       REST OF CSS - (SAME AS YOUR ORIGINAL, abbreviated)
+       APP HEADER
     ============================================================ */
-    /* ... (sertakan semua CSS dari Index.html Anda di sini) ... */
-    
-    /* Untuk keperluan demo, saya sertakan CSS minimal */
     .app-header {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
       color: var(--white);
-      padding: 12px 30px;
+      padding: 8px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       box-shadow: var(--shadow);
-      position: sticky;
-      top: 0;
+      flex-shrink: 0;
       z-index: 100;
+      min-height: 56px;
     }
     
     .app-header .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     
     .app-header .logo img {
-      width: 45px;
-      height: 45px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--gold);
       background: var(--white);
-      padding: 3px;
+      padding: 2px;
     }
     
     .app-header .logo h1 {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
     }
     
@@ -245,56 +246,48 @@
     }
     
     .app-header .logo .subtitle {
-      font-size: 10px;
+      font-size: 8px;
       font-weight: 300;
       opacity: 0.8;
       letter-spacing: 2px;
       text-transform: uppercase;
     }
     
-    .user-info {
+    .header-actions {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 10px;
+    }
+    
+    #sessionTimer {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
       background: rgba(255,255,255,0.1);
-      padding: 8px 18px;
-      border-radius: 25px;
-      flex-wrap: wrap;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 500;
     }
     
-    .btn-logout {
-      background: rgba(255,255,255,0.2);
-      color: var(--white);
-      border: none;
-      padding: 6px 16px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: var(--transition);
+    #sessionTimer.warning {
+      color: var(--gold);
+      animation: blink 1s ease-in-out infinite;
     }
     
-    .btn-logout:hover {
-      background: rgba(255,255,255,0.3);
-      transform: scale(1.05);
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
     
-    .content {
-      padding: 25px 30px;
-      max-width: 1400px;
-      margin: 0 auto;
-      min-height: calc(100vh - 120px);
-    }
-    
-    /* Install Button */
+    /* Tombol Install di Header (akan sembunyi) */
     #installBtn {
       display: none;
       background: var(--gold);
       color: var(--navy);
       border: none;
-      padding: 6px 16px;
+      padding: 5px 14px;
       border-radius: 15px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       transition: var(--transition);
     }
@@ -304,19 +297,101 @@
       background: var(--gold-light);
     }
     
-    @media (max-width: 768px) {
-      .app-header { padding: 12px 15px; }
-      .app-header .logo h1 { font-size: 18px; }
-      .splash-title { font-size: 28px; }
-      .splash-logo { width: 100px; height: 100px; }
-      .content { padding: 15px; }
+    .btn-logout {
+      background: rgba(255,255,255,0.15);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 5px 14px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: var(--transition);
     }
     
-    /* Install prompt untuk iOS */
+    .btn-logout:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.05);
+    }
+    
+    /* ============================================================
+       IFRAME - FULLSCREEN
+    ============================================================ */
+    #appIframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: var(--gray-50);
+    }
+    
+    /* ============================================================
+       TOMBOL INSTALL DI BAWAH LOGIN (di dalam iframe)
+       Sebenarnya kita tidak bisa menaruh tombol di dalam iframe,
+       tapi kita bisa menaruhnya sebagai overlay di atas login page
+    ============================================================ */
+    #installOverlay {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      display: none;
+      animation: slideUp 0.5s ease;
+    }
+    
+    #installOverlay.show {
+      display: block;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    
+    .btn-install-bottom {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: var(--navy);
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(245, 180, 0, 0.4);
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .btn-install-bottom:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(245, 180, 0, 0.6);
+    }
+    
+    .btn-install-bottom:active {
+      transform: scale(0.95);
+    }
+    
+    .btn-install-bottom i {
+      font-size: 22px;
+    }
+    
+    .btn-install-bottom .install-badge {
+      background: rgba(13, 47, 95, 0.15);
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    /* ============================================================
+       IOS INSTALL PROMPT
+    ============================================================ */
     .ios-install-prompt {
       display: none;
       position: fixed;
-      bottom: 20px;
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--navy);
@@ -324,16 +399,11 @@
       padding: 15px 25px;
       border-radius: var(--radius);
       box-shadow: var(--shadow-hover);
-      z-index: 999;
+      z-index: 1000;
       max-width: 90%;
       text-align: center;
       font-size: 14px;
       animation: slideUp 0.5s ease;
-    }
-    
-    @keyframes slideUp {
-      from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-      to { transform: translateX(-50%) translateY(0); opacity: 1; }
     }
     
     .ios-install-prompt .close-prompt {
@@ -351,6 +421,73 @@
       font-size: 30px;
       display: block;
       margin: 5px 0;
+    }
+    
+    /* ============================================================
+       LOADING OVERLAY
+    ============================================================ */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    #loadingOverlay.active {
+      display: flex;
+    }
+    
+    #loadingOverlay .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--gray-200);
+      border-top: 4px solid var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    #loadingOverlay p {
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+    
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      .app-header { padding: 6px 12px; min-height: 48px; }
+      .app-header .logo h1 { font-size: 15px; }
+      .app-header .logo img { width: 30px; height: 30px; }
+      .app-header .logo .subtitle { display: none; }
+      #sessionTimer { font-size: 10px; padding: 2px 10px; }
+      .btn-logout { font-size: 10px; padding: 4px 10px; }
+      .btn-install-bottom { padding: 12px 24px; font-size: 14px; }
+      .btn-install-bottom i { font-size: 18px; }
+      .splash-title { font-size: 28px; }
+      .splash-logo { width: 100px; height: 100px; }
+      #installOverlay { bottom: 15px; width: 92%; }
+      .btn-install-bottom { width: 100%; justify-content: center; }
+    }
+    
+    @media (max-width: 480px) {
+      .splash-title { font-size: 24px; }
+      .splash-logo { width: 80px; height: 80px; }
+      .splash-subtitle { font-size: 11px; letter-spacing: 2px; }
+      .btn-install-bottom { padding: 10px 18px; font-size: 13px; }
+      .btn-install-bottom .install-badge { display: none; }
     }
   </style>
 </head>
@@ -379,7 +516,26 @@
   </div>
   
   <!-- ============================================================
-       INSTALL PROMPT iOS
+       LOADING OVERLAY
+  ============================================================ -->
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p>Memuat aplikasi...</p>
+  </div>
+  
+  <!-- ============================================================
+       TOMBOL INSTALL DI BAWAH LAYAR (Overlay)
+  ============================================================ -->
+  <div id="installOverlay">
+    <button class="btn-install-bottom" onclick="installApp()">
+      <i class="fas fa-download"></i>
+      <span>Instal SiapJalan</span>
+      <span class="install-badge"><i class="fas fa-mobile-alt"></i> PWA</span>
+    </button>
+  </div>
+  
+  <!-- ============================================================
+       IOS INSTALL PROMPT
   ============================================================ -->
   <div class="ios-install-prompt" id="iosPrompt">
     <button class="close-prompt" onclick="document.getElementById('iosPrompt').style.display='none'">&times;</button>
@@ -403,35 +559,151 @@
           <div class="subtitle">Backup &amp; Monitoring System</div>
         </div>
       </div>
-      <div class="user-info">
-        <span id="userDisplay">Loading...</span>
-        <button id="installBtn" onclick="installApp()">
-          <i class="fas fa-download"></i> Install
-        </button>
+      <div class="header-actions">
+        <span id="sessionTimer">⏱️ 30:00</span>
         <button class="btn-logout" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i> Logout
         </button>
       </div>
     </header>
     
-    <div class="content">
-      <div style="text-align:center;padding:60px 20px;background:rgba(255,255,255,0.9);border-radius:var(--radius);box-shadow:var(--shadow);">
-        <i class="fas fa-sync fa-spin" style="font-size:48px;color:var(--gold);margin-bottom:20px;"></i>
-        <h2 style="color:var(--navy);margin-bottom:10px;">Memuat Aplikasi...</h2>
-        <p style="color:var(--gray-600);">Silakan tunggu sebentar</p>
-        <div style="margin-top:20px;display:flex;justify-content:center;gap:8px;">
-          <span class="dot" style="width:12px;height:12px;border-radius:50%;background:var(--gold);animation:dotBounce 1.4s ease-in-out infinite both;"></span>
-          <span class="dot" style="width:12px;height:12px;border-radius:50%;background:var(--gold);animation:dotBounce 1.4s ease-in-out infinite both;animation-delay:-0.16s;"></span>
-          <span class="dot" style="width:12px;height:12px;border-radius:50%;background:var(--gold);animation:dotBounce 1.4s ease-in-out infinite both;animation-delay:0s;"></span>
-        </div>
-      </div>
-    </div>
+    <!-- IFRAME untuk web app -->
+    <iframe id="appIframe" 
+            src="https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec"
+            allow="geolocation; microphone; camera; midi; encrypted-media"
+            allowfullscreen>
+    </iframe>
   </div>
   
   <!-- ============================================================
        JAVASCRIPT
   ============================================================ -->
   <script>
+    // ============================================================
+    // AUTO LOGOUT - 30 MINUTES INACTIVITY
+    // ============================================================
+    const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 menit
+    let sessionTimer = null;
+    let timeLeft = SESSION_TIMEOUT;
+    let timerInterval = null;
+    let isWarningShown = false;
+    let isLoggedIn = false;
+    
+    // Reset timer
+    function resetSessionTimer() {
+      timeLeft = SESSION_TIMEOUT;
+      isWarningShown = false;
+      updateTimerDisplay();
+      clearTimeout(sessionTimer);
+      sessionTimer = setTimeout(handleSessionTimeout, SESSION_TIMEOUT);
+    }
+    
+    // Update display timer
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60000);
+      const seconds = Math.floor((timeLeft % 60000) / 1000);
+      const display = document.getElementById('sessionTimer');
+      display.textContent = `⏱️ ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      
+      if (timeLeft < 5 * 60 * 1000) {
+        display.classList.add('warning');
+        if (!isWarningShown) {
+          isWarningShown = true;
+          showToast('⚠️ Sesi akan berakhir dalam 5 menit! Lakukan aktivitas untuk tetap login.', 'warning');
+        }
+      } else {
+        display.classList.remove('warning');
+      }
+    }
+    
+    function handleSessionTimeout() {
+      showToast('⏰ Sesi berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.', 'error');
+      logout();
+    }
+    
+    function resetInactivityTimer() {
+      if (isLoggedIn) {
+        resetSessionTimer();
+      }
+    }
+    
+    // Event listener untuk aktivitas user
+    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart', 'touchmove', 'pointerdown', 'pointermove'];
+    events.forEach(event => {
+      document.addEventListener(event, resetInactivityTimer, true);
+    });
+    
+    function startTimerInterval() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft -= 1000;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleSessionTimeout();
+        } else {
+          updateTimerDisplay();
+        }
+      }, 1000);
+    }
+    
+    // ============================================================
+    // IFRAME LOADING HANDLER
+    // ============================================================
+    function handleIframeLoad() {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.classList.remove('active');
+      
+      // Deteksi login dengan memeriksa URL atau konten iframe
+      try {
+        const iframe = document.getElementById('appIframe');
+        const iframeUrl = iframe.contentWindow.location.href;
+        // Cek apakah sudah login (bisa disesuaikan dengan URL setelah login)
+        if (iframeUrl.includes('exec') && !iframeUrl.includes('login')) {
+          isLoggedIn = true;
+          resetSessionTimer();
+          startTimerInterval();
+          // Sembunyikan tombol install saat sudah login
+          document.getElementById('installOverlay').classList.remove('show');
+        } else {
+          // Tampilkan tombol install di halaman login
+          document.getElementById('installOverlay').classList.add('show');
+        }
+      } catch(e) {
+        // Cross-origin error - asumsikan sudah login
+        isLoggedIn = true;
+        resetSessionTimer();
+        startTimerInterval();
+        document.getElementById('installOverlay').classList.remove('show');
+      }
+    }
+    
+    // ============================================================
+    // DETECT LOGIN STATE - polling setiap 2 detik
+    // ============================================================
+    let loginCheckInterval = null;
+    
+    function checkLoginState() {
+      try {
+        const iframe = document.getElementById('appIframe');
+        const iframeUrl = iframe.contentWindow.location.href;
+        
+        // Cek apakah di halaman login (sesuaikan dengan URL login page)
+        if (iframeUrl.includes('login') || iframeUrl.includes('Login')) {
+          document.getElementById('installOverlay').classList.add('show');
+          isLoggedIn = false;
+        } else if (iframeUrl.includes('exec') && !iframeUrl.includes('login')) {
+          document.getElementById('installOverlay').classList.remove('show');
+          if (!isLoggedIn) {
+            isLoggedIn = true;
+            resetSessionTimer();
+            startTimerInterval();
+          }
+        }
+      } catch(e) {
+        // Cross-origin - biarkan tombol tetap tersembunyi
+      }
+    }
+    
     // ============================================================
     // PWA - INSTALLATION
     // ============================================================
@@ -454,12 +726,13 @@
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('installBtn').style.display = 'inline-block';
+      // Tampilkan tombol install
+      document.getElementById('installOverlay').classList.add('show');
       console.log('📲 Install prompt available');
     });
     
     window.addEventListener('appinstalled', function() {
-      document.getElementById('installBtn').style.display = 'none';
+      document.getElementById('installOverlay').classList.remove('show');
       console.log('✅ App installed successfully');
       showToast('✅ Aplikasi berhasil diinstal!', 'success');
     });
@@ -470,7 +743,7 @@
         deferredPrompt.userChoice.then(function(choiceResult) {
           if (choiceResult.outcome === 'accepted') {
             console.log('✅ User accepted the install prompt');
-            document.getElementById('installBtn').style.display = 'none';
+            document.getElementById('installOverlay').classList.remove('show');
           } else {
             console.log('❌ User dismissed the install prompt');
           }
@@ -490,105 +763,122 @@
     // HIDE SPLASH & LOAD APP
     // ============================================================
     window.addEventListener('load', function() {
-      // Show main app after splash
+      document.getElementById('loadingOverlay').classList.add('active');
+      
       setTimeout(function() {
         document.getElementById('splashScreen').classList.add('hidden');
+        
         const mainApp = document.getElementById('mainApp');
-        mainApp.style.display = 'block';
+        mainApp.style.display = 'flex';
         setTimeout(function() {
           mainApp.classList.add('visible');
         }, 100);
         
-        // Load real app content
-        loadAppContent();
+        const iframe = document.getElementById('appIframe');
+        iframe.addEventListener('load', handleIframeLoad);
+        
+        // Mulai cek login state
+        loginCheckInterval = setInterval(checkLoginState, 3000);
+        
+        // Fallback timeout
+        setTimeout(function() {
+          const overlay = document.getElementById('loadingOverlay');
+          if (overlay.classList.contains('active')) {
+            overlay.classList.remove('active');
+            // Tampilkan tombol install jika belum loading
+            document.getElementById('installOverlay').classList.add('show');
+          }
+        }, 15000);
+        
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+          handleIframeLoad();
+        }
+        
       }, 3000);
     });
-    
-    function loadAppContent() {
-      // Simulate loading real app
-      const content = document.querySelector('.content');
-      content.innerHTML = `
-        <div style="text-align:center;padding:40px 20px;">
-          <i class="fas fa-check-circle" style="font-size:48px;color:var(--success);margin-bottom:20px;"></i>
-          <h2 style="color:var(--navy);">Aplikasi Siap Digunakan</h2>
-          <p style="color:var(--gray-600);margin:10px 0 20px;">
-            <i class="fas fa-arrow-right"></i> Buka <strong>https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec</strong>
-          </p>
-          <button onclick="window.open('https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec', '_blank')" 
-                  style="padding:14px 30px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;">
-            <i class="fas fa-external-link-alt"></i> Buka Aplikasi
-          </button>
-          <div style="margin-top:30px;padding:20px;background:var(--gray-50);border-radius:8px;max-width:500px;margin-left:auto;margin-right:auto;">
-            <p style="font-size:13px;color:var(--gray-600);">
-              <i class="fas fa-info-circle" style="color:var(--gold);"></i> 
-              Aplikasi ini adalah wrapper PWA untuk SIAP JALAN. 
-              <br>Klik tombol di atas untuk membuka aplikasi utama.
-            </p>
-          </div>
-        </div>
-      `;
-      
-      // Update user info
-      document.getElementById('userDisplay').innerHTML = `
-        <span style="font-weight:600;">👤 Guest</span>
-        <span style="background:var(--gold);color:var(--navy);padding:2px 12px;border-radius:12px;font-size:11px;font-weight:700;">viewer</span>
-      `;
-    }
     
     // ============================================================
     // TOAST
     // ============================================================
     function showToast(message, type) {
       const toast = document.createElement('div');
+      const colors = {
+        success: '#28a745',
+        error: '#dc3545',
+        warning: '#ffc107',
+        info: '#17a2b8'
+      };
+      
       toast.style.cssText = `
         position: fixed;
-        bottom: 30px;
+        bottom: ${document.getElementById('installOverlay').classList.contains('show') ? '100px' : '30px'};
         left: 50%;
         transform: translateX(-50%);
         padding: 14px 28px;
         border-radius: 12px;
-        color: white;
+        color: ${type === 'warning' ? '#333' : 'white'};
         font-weight: 600;
         z-index: 9999;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         animation: slideUp 0.5s ease;
         max-width: 90%;
-        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#17a2b8'};
-        color: ${type === 'warning' ? '#333' : 'white'};
+        background: ${colors[type] || colors.info};
+        font-family: 'Inter', sans-serif;
+        text-align: center;
       `;
       toast.textContent = message;
       document.body.appendChild(toast);
+      
       setTimeout(function() {
         toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.5s';
+        toast.style.transition = 'opacity 0.5s ease';
         setTimeout(function() { toast.remove(); }, 500);
-      }, 4000);
+      }, 5000);
     }
     
     // ============================================================
     // LOGOUT
     // ============================================================
     function logout() {
-      if (confirm('Yakin ingin logout?')) {
-        showToast('👋 Logout berhasil', 'info');
-        // Redirect to login or reload
-        window.location.reload();
-      }
+      if (timerInterval) clearInterval(timerInterval);
+      if (sessionTimer) clearTimeout(sessionTimer);
+      if (loginCheckInterval) clearInterval(loginCheckInterval);
+      
+      isLoggedIn = false;
+      
+      const iframe = document.getElementById('appIframe');
+      iframe.src = 'https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec';
+      
+      timeLeft = SESSION_TIMEOUT;
+      updateTimerDisplay();
+      
+      // Tampilkan tombol install
+      setTimeout(() => {
+        document.getElementById('installOverlay').classList.add('show');
+      }, 1000);
+      
+      showToast('👋 Anda telah logout', 'info');
     }
     
     // ============================================================
     // KEYBOARD SHORTCUTS
     // ============================================================
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal').forEach(function(m) {
-          m.style.display = 'none';
-        });
+      if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
+        e.preventDefault();
+        if (confirm('Yakin ingin logout?')) {
+          logout();
+        }
       }
     });
     
+    // ============================================================
+    // CONSOLE LOG
+    // ============================================================
     console.log('🚀 SIAP JALAN PWA v2.0 loaded!');
-    console.log('📱 Install app with Chrome/Edge or add to home screen');
+    console.log('⏱️ Auto logout: 30 menit tidak ada aktivitas');
+    console.log('⌨️ Shortcut: Ctrl+Shift+L untuk logout');
+    console.log('📱 Klik "Instal SiapJalan" di bawah untuk install PWA');
   </script>
 </body>
 </html>
