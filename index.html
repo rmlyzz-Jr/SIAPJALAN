@@ -24,11 +24,8 @@
     <meta name="msapplication-TileColor" content="#0D2F5F">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css">
     
-    <!-- ============================================================
-         CSS
-    ============================================================ -->
     <style>
         /* ============================================================
            CSS VARIABLES - WARNA NAVY & GOLD
@@ -1069,6 +1066,97 @@
         }
 
         /* ============================================================
+           REKAP SIDEBAR
+        ============================================================ */
+        .rekap-container {
+            display: flex;
+            gap: 25px;
+            min-height: 500px;
+        }
+
+        .rekap-sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: var(--gray-50);
+            border-radius: 8px;
+            padding: 15px 0;
+            border: 1px solid var(--gray-200);
+        }
+
+        .rekap-sidebar .sidebar-title {
+            padding: 0 15px 12px 15px;
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 14px;
+            border-bottom: 2px solid var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .rekap-sidebar .sidebar-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray-600);
+            font-weight: 500;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+
+        .rekap-sidebar .sidebar-item:hover {
+            background: var(--gray-100);
+            color: var(--navy);
+        }
+
+        .rekap-sidebar .sidebar-item.active {
+            background: rgba(13,47,95,0.08);
+            color: var(--navy);
+            border-left-color: var(--gold);
+            font-weight: 600;
+        }
+
+        .rekap-sidebar .sidebar-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--gold);
+        }
+
+        .rekap-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 768px) {
+            .rekap-container {
+                flex-direction: column;
+            }
+            .rekap-sidebar {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                padding: 10px;
+                gap: 5px;
+            }
+            .rekap-sidebar .sidebar-title {
+                width: 100%;
+                padding: 0 10px 10px 10px;
+            }
+            .rekap-sidebar .sidebar-item {
+                padding: 8px 12px;
+                flex: 1;
+                min-width: 120px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            .rekap-sidebar .sidebar-item.active {
+                border-left: none;
+                border-bottom-color: var(--gold);
+            }
+        }
+
+        /* ============================================================
            SCROLLBAR
         ============================================================ */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -1188,6 +1276,9 @@
                 </button>
                 <button class="tab-btn" data-tab="tab4" onclick="switchTab('tab4')" id="tabMaster">
                     <i class="fas fa-users-cog"></i> Master User
+                </button>
+                <button class="tab-btn" data-tab="tab5" onclick="switchTab('tab5')" id="tabRekap">
+                    <i class="fas fa-clipboard-list"></i> Rekap
                 </button>
             </div>
         </div>
@@ -1502,6 +1593,120 @@
                             <tbody id="tableBodyUser">
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ==========================================================
+                 TAB 5 - REKAP PEKERJAAN
+            ========================================================== -->
+            <div class="tab-panel" id="tab5">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-clipboard-list"></i> Rekap Pekerjaan
+                        <span style="margin-left:auto;font-size:14px;font-weight:400;color:var(--gray-600);">
+                            <i class="fas fa-file-alt"></i> Total: <span id="totalRekap">0</span>
+                        </span>
+                    </div>
+                    
+                    <!-- Filter -->
+                    <div class="filter-bar">
+                        <div class="form-group">
+                            <label>Tahun</label>
+                            <select class="form-control" id="filterRekapTahun" onchange="loadRekap()">
+                                <option value="">Semua Tahun</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Pekerjaan</label>
+                            <select class="form-control" id="filterRekapJenis" onchange="loadRekap()">
+                                <option value="">Semua</option>
+                                <option value="E-Purchasing">E-Purchasing</option>
+                                <option value="Pengadaan Langsung">Pengadaan Langsung</option>
+                                <option value="Penunjukan Langsung">Penunjukan Langsung</option>
+                                <option value="Tender Cepat">Tender Cepat</option>
+                                <option value="Tender">Tender</option>
+                                <option value="Seleksi">Seleksi</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:2;">
+                            <label>Cari</label>
+                            <input type="text" class="form-control" id="filterRekapKeyword" placeholder="Cari nama, ppk, pptk, kontrak..." onkeyup="if(event.key==='Enter') loadRekap()">
+                        </div>
+                        <button class="btn btn-primary" onclick="loadRekap()">
+                            <i class="fas fa-search"></i> Cari
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetFilterRekap()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button class="btn btn-success" onclick="exportRekap()">
+                            <i class="fas fa-file-excel"></i> Export
+                        </button>
+                    </div>
+                    
+                    <!-- Sidebar + Content -->
+                    <div class="rekap-container">
+                        <!-- Sidebar -->
+                        <div class="rekap-sidebar">
+                            <div class="sidebar-title">
+                                <i class="fas fa-folder-open"></i> Jenis Pekerjaan
+                            </div>
+                            <div class="sidebar-item active" data-jenis="" onclick="filterRekapJenis(this, '')">
+                                <i class="fas fa-list"></i> Semua
+                            </div>
+                            <div class="sidebar-item" data-jenis="E-Purchasing" onclick="filterRekapJenis(this, 'E-Purchasing')">
+                                <i class="fas fa-shopping-cart"></i> E-Purchasing
+                            </div>
+                            <div class="sidebar-item" data-jenis="Pengadaan Langsung" onclick="filterRekapJenis(this, 'Pengadaan Langsung')">
+                                <i class="fas fa-bolt"></i> Pengadaan Langsung
+                            </div>
+                            <div class="sidebar-item" data-jenis="Penunjukan Langsung" onclick="filterRekapJenis(this, 'Penunjukan Langsung')">
+                                <i class="fas fa-hand-pointer"></i> Penunjukan Langsung
+                            </div>
+                            <div class="sidebar-item" data-jenis="Tender Cepat" onclick="filterRekapJenis(this, 'Tender Cepat')">
+                                <i class="fas fa-clock"></i> Tender Cepat
+                            </div>
+                            <div class="sidebar-item" data-jenis="Tender" onclick="filterRekapJenis(this, 'Tender')">
+                                <i class="fas fa-gavel"></i> Tender
+                            </div>
+                            <div class="sidebar-item" data-jenis="Seleksi" onclick="filterRekapJenis(this, 'Seleksi')">
+                                <i class="fas fa-filter"></i> Seleksi
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="rekap-content">
+                            <div class="table-wrapper">
+                                <div id="loadingRekap" class="loading">
+                                    <div class="spinner"></div>
+                                    <p style="margin-top:15px;">Memuat data...</p>
+                                </div>
+                                <div id="tableRekapContainer" style="display:none;">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Pekerjaan</th>
+                                                <th>Pagu</th>
+                                                <th>PPK</th>
+                                                <th>PPTK</th>
+                                                <th>Pengawas</th>
+                                                <th>Admin</th>
+                                                <th>Perencana</th>
+                                                <th>Pejabat Pengadaan</th>
+                                                <th>Tanggal Awal</th>
+                                                <th>Tanggal Akhir</th>
+                                                <th>Nomor Kontrak</th>
+                                                <th>Jenis Pekerjaan</th>
+                                                <th>Tahun</th>
+                                                <th>Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBodyRekap">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
