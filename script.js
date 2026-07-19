@@ -3,6 +3,7 @@
 // ============================================================
 let currentUser = null;
 let allData = [];
+let rekapData = [];
 let dashboardData = null;
 let isLoggingIn = false;
 let currentMonth = new Date().getMonth();
@@ -15,35 +16,30 @@ let isAppInstalled = false;
 // SPREADSHEET CONFIGURATION (Google Apps Script Backend URL)
 // ============================================================
 // ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
 // ============================================================
 // PWA - INSTALL APP HANDLING
 // ============================================================
-// Cek apakah aplikasi sudah terinstall
 window.addEventListener('appinstalled', function(event) {
     isAppInstalled = true;
     document.getElementById('installBanner').style.display = 'none';
     showToast('✅ Aplikasi berhasil diinstall!', 'success');
 });
 
-// Tangkap event beforeinstallprompt
 window.addEventListener('beforeinstallprompt', function(event) {
     event.preventDefault();
     deferredPrompt = event;
     
-    // Tampilkan banner install
     const installBanner = document.getElementById('installBanner');
     installBanner.style.display = 'flex';
     
-    // Cek apakah sudah terinstall
     if (window.matchMedia('(display-mode: standalone)').matches) {
         installBanner.style.display = 'none';
         isAppInstalled = true;
     }
 });
 
-// Fungsi install app
 function installApp() {
     if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -62,25 +58,22 @@ function installApp() {
     }
 }
 
-// Fungsi close banner
 function closeInstallBanner() {
     document.getElementById('installBanner').style.display = 'none';
     localStorage.setItem('hideInstallBanner', 'true');
 }
 
-// Cek apakah banner pernah ditutup
 if (localStorage.getItem('hideInstallBanner') === 'true') {
     document.getElementById('installBanner').style.display = 'none';
 }
 
-// Cek mode standalone
 if (window.matchMedia('(display-mode: standalone)').matches) {
     isAppInstalled = true;
     document.getElementById('installBanner').style.display = 'none';
 }
 
 // ============================================================
-// INIT - Service Worker Registration (PWA)
+// SERVICE WORKER REGISTRATION
 // ============================================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -91,8 +84,6 @@ if ('serviceWorker' in navigator) {
             })
             .catch(function(error) {
                 console.log('❌ ServiceWorker registration failed:', error);
-                console.log('URL yang dicoba:', window.location.origin + '/sw.js');
-                // Aplikasi tetap berjalan meskipun SW gagal
             });
     });
 }
@@ -119,15 +110,20 @@ window.onload = function() {
 
 function generateTahunOptions() {
     const currentYear = new Date().getFullYear();
-    const select = document.getElementById('inputTahun');
-    if (!select) return;
-    select.innerHTML = '<option value="">Pilih Tahun</option>';
-    for (let y = currentYear; y >= currentYear - 10; y--) {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.textContent = y;
-        select.appendChild(opt);
-    }
+    const selects = ['inputTahun', 'filterRekapTahun'];
+    selects.forEach(function(id) {
+        const select = document.getElementById(id);
+        if (!select) return;
+        const currentVal = select.value;
+        select.innerHTML = '<option value="">Pilih Tahun</option>';
+        for (let y = currentYear; y >= currentYear - 10; y--) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            if (y == currentVal) opt.selected = true;
+            select.appendChild(opt);
+        }
+    });
 }
 
 // ============================================================
@@ -159,6 +155,8 @@ function showMainApp() {
     loadAduan();
     loadDashboard();
     loadUsers();
+    loadRekap();
+    loadTahunRekap();
     setFilterDates();
     
     if (currentUser) {
@@ -178,9 +176,9 @@ function showMainApp() {
 function getAllowedTabs() {
     if (!currentUser) return ['tab2'];
     switch(currentUser.role) {
-        case 'admin': return ['tab1', 'tab2', 'tab3', 'tab4'];
+        case 'admin': return ['tab1', 'tab2', 'tab3', 'tab4', 'tab5'];
         case 'operator': return ['tab2', 'tab3'];
-        case 'pegawai': return ['tab2'];
+        case 'pegawai': return ['tab2', 'tab5'];
         default: return ['tab2'];
     }
 }
@@ -196,19 +194,23 @@ function setupAccess() {
     const tabInput = document.querySelector('[data-tab="tab1"]');
     const tabMaster = document.getElementById('tabMaster');
     const tabDashboard = document.querySelector('[data-tab="tab3"]');
+    const tabRekap = document.getElementById('tabRekap');
     
     if (isAdmin) {
         if (tabInput) { tabInput.classList.remove('hidden-tab'); tabInput.disabled = false; }
         if (tabMaster) { tabMaster.classList.remove('hidden-tab'); tabMaster.disabled = false; }
         if (tabDashboard) { tabDashboard.classList.remove('hidden-tab'); tabDashboard.disabled = false; }
+        if (tabRekap) { tabRekap.classList.remove('hidden-tab'); tabRekap.disabled = false; }
     } else if (isOperator) {
         if (tabInput) { tabInput.classList.add('hidden-tab'); }
         if (tabMaster) { tabMaster.classList.add('hidden-tab'); }
         if (tabDashboard) { tabDashboard.classList.remove('hidden-tab'); tabDashboard.disabled = false; }
+        if (tabRekap) { tabRekap.classList.add('hidden-tab'); }
     } else if (isPegawai) {
         if (tabInput) { tabInput.classList.add('hidden-tab'); }
         if (tabMaster) { tabMaster.classList.add('hidden-tab'); }
         if (tabDashboard) { tabDashboard.classList.add('hidden-tab'); }
+        if (tabRekap) { tabRekap.classList.remove('hidden-tab'); tabRekap.disabled = false; }
     }
     
     const filterTimGroup = document.getElementById('filterTimGroup');
@@ -247,11 +249,15 @@ function doLogin() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
     document.getElementById('loginError').style.display = 'none';
     
-    // Panggil backend Google Apps Script
     fetch(SCRIPT_URL + '?action=login', {
         method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
         body: JSON.stringify({ username: username, password: password }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
     })
     .then(response => response.json())
     .then(result => {
@@ -314,7 +320,7 @@ function updateUserUI() {
 }
 
 // ============================================================
-// CALL BACKEND FUNCTION (Helper)
+// CALL BACKEND FUNCTION
 // ============================================================
 function callBackend(action, data, callback) {
     const payload = { action: action, ...data };
@@ -324,14 +330,19 @@ function callBackend(action, data, callback) {
     
     fetch(SCRIPT_URL + '?action=' + action, {
         method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
         body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
     })
     .then(response => response.json())
     .then(callback)
     .catch(error => {
         console.error('Error calling backend:', error);
-        showToast('❌ Error: ' + error, 'error');
+        showToast('❌ Error: ' + error.message, 'error');
     });
 }
 
@@ -358,6 +369,7 @@ function switchTab(tabId) {
     
     if (tabId === 'tab3') loadDashboard();
     if (tabId === 'tab4') loadUsers();
+    if (tabId === 'tab5') { loadRekap(); loadTahunRekap(); }
     if (tabId === 'tab1' && currentUser && currentUser.role === 'admin') {
         generateKode();
         setDefaultDate();
@@ -433,7 +445,6 @@ function loadTimList(selectedTim, selectedPIC) {
             });
         });
         
-        // Set PIC otomatis untuk inputTim
         const inputTim = document.getElementById('inputTim');
         if (inputTim) {
             inputTim.onchange = function() {
@@ -953,6 +964,159 @@ function hapusUser(username) {
             showToast('❌ ' + result.message, 'error');
         }
     });
+}
+
+// ============================================================
+// TAB 5 - REKAP PEKERJAAN
+// ============================================================
+function loadTahunRekap() {
+    callBackend('getTahunRekap', {}, function(result) {
+        const select = document.getElementById('filterRekapTahun');
+        if (!select) return;
+        
+        const currentVal = select.value;
+        select.innerHTML = '<option value="">Semua Tahun</option>';
+        
+        if (result.success && Array.isArray(result.data)) {
+            result.data.forEach(function(tahun) {
+                const opt = document.createElement('option');
+                opt.value = tahun;
+                opt.textContent = tahun;
+                if (tahun === currentVal) opt.selected = true;
+                select.appendChild(opt);
+            });
+        } else {
+            // Fallback
+            const currentYear = new Date().getFullYear();
+            for (let y = currentYear; y >= currentYear - 10; y--) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                if (y === currentVal) opt.selected = true;
+                select.appendChild(opt);
+            }
+        }
+    });
+}
+
+function loadRekap() {
+    document.getElementById('loadingRekap').style.display = 'block';
+    document.getElementById('tableRekapContainer').style.display = 'none';
+    
+    const filter = {
+        tahun: document.getElementById('filterRekapTahun').value,
+        jenis: document.getElementById('filterRekapJenis').value,
+        keyword: document.getElementById('filterRekapKeyword').value.trim()
+    };
+    
+    // Ambil dari sidebar
+    const activeJenis = document.querySelector('.rekap-sidebar .sidebar-item.active');
+    if (activeJenis && activeJenis.dataset.jenis && !filter.jenis) {
+        filter.jenis = activeJenis.dataset.jenis;
+    }
+    
+    callBackend('getPekerjaanData', { filter: filter }, function(result) {
+        document.getElementById('loadingRekap').style.display = 'none';
+        document.getElementById('tableRekapContainer').style.display = 'block';
+        
+        if (result.success) {
+            rekapData = result.data || [];
+            renderRekapTable(rekapData);
+            document.getElementById('totalRekap').textContent = rekapData.length;
+        } else {
+            showToast('❌ ' + result.message, 'error');
+            rekapData = [];
+            renderRekapTable([]);
+        }
+    });
+}
+
+function renderRekapTable(data) {
+    const tbody = document.getElementById('tableBodyRekap');
+    if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="14" style="text-align:center;padding:40px;color:#999;"><i class="fas fa-inbox" style="font-size:40px;display:block;margin-bottom:10px;"></i>Tidak ada data</td></tr>`;
+        return;
+    }
+    
+    let html = '';
+    data.forEach(function(item) {
+        const jenisClass = item['JENIS PEKERJAAN'] === 'E-Purchasing' ? 'status-baru' : 
+                           item['JENIS PEKERJAAN'] === 'Pengadaan Langsung' ? 'status-proses' : 
+                           item['JENIS PEKERJAAN'] === 'Penunjukan Langsung' ? 'status-selesai' :
+                           item['JENIS PEKERJAAN'] === 'Tender Cepat' ? 'status-proses' :
+                           item['JENIS PEKERJAAN'] === 'Tender' ? 'status-baru' : 'status-default';
+        html += `<tr>
+            <td><span class="text-truncate" title="${item['NAMA PEKERJAAN'] || ''}">${item['NAMA PEKERJAAN'] || '-'}</span></td>
+            <td>${item['PAGU'] || '-'}</td>
+            <td>${item['PPK'] || '-'}</td>
+            <td>${item['PPTK'] || '-'}</td>
+            <td>${item['PENGAWAS'] || '-'}</td>
+            <td>${item['ADMIN'] || '-'}</td>
+            <td>${item['PERENCANA'] || '-'}</td>
+            <td>${item['PEJABAT PENGADAAN'] || '-'}</td>
+            <td>${item['TANGGAL AWAL'] || '-'}</td>
+            <td>${item['TANGGAL AKHIR'] || '-'}</td>
+            <td>${item['NOMOR KONTRAK'] || '-'}</td>
+            <td><span class="status-badge ${jenisClass}">${item['JENIS PEKERJAAN'] || '-'}</span></td>
+            <td>${item['TAHUN'] || '-'}</td>
+            <td><span class="text-truncate" title="${item['KETERANGAN'] || ''}">${item['KETERANGAN'] || '-'}</span></td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+}
+
+function filterRekapJenis(element, jenis) {
+    document.querySelectorAll('.rekap-sidebar .sidebar-item').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    element.classList.add('active');
+    document.getElementById('filterRekapJenis').value = jenis;
+    loadRekap();
+}
+
+function resetFilterRekap() {
+    document.getElementById('filterRekapTahun').value = '';
+    document.getElementById('filterRekapJenis').value = '';
+    document.getElementById('filterRekapKeyword').value = '';
+    
+    document.querySelectorAll('.rekap-sidebar .sidebar-item').forEach(function(el) {
+        el.classList.remove('active');
+        if (el.dataset.jenis === '') {
+            el.classList.add('active');
+        }
+    });
+    loadRekap();
+}
+
+function exportRekap() {
+    if (!rekapData || rekapData.length === 0) {
+        showToast('⚠️ Tidak ada data untuk diexport!', 'warning');
+        return;
+    }
+    
+    const headers = ['NAMA PEKERJAAN', 'PAGU', 'PPK', 'PPTK', 'PENGAWAS', 'ADMIN', 'PERENCANA', 'PEJABAT PENGADAAN', 'TANGGAL AWAL', 'TANGGAL AKHIR', 'NOMOR KONTRAK', 'JENIS PEKERJAAN', 'TAHUN', 'KETERANGAN'];
+    let csv = '\uFEFF' + headers.join(',') + '\n';
+    
+    rekapData.forEach(function(item) {
+        const row = headers.map(function(h) {
+            let val = item[h] || '';
+            if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
+                return '"' + val.replace(/"/g, '""') + '"';
+            }
+            return val;
+        });
+        csv += row.join(',') + '\n';
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Rekap_Pekerjaan_BM_' + new Date().toISOString().split('T')[0] + '.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+    showToast('✅ Ekspor rekap berhasil!', 'success');
 }
 
 // ============================================================
