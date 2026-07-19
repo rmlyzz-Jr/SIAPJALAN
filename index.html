@@ -95,12 +95,12 @@
     }
     
     .splash-logo {
-      width: 140px;
-      height: 140px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       background: var(--white);
-      padding: 15px;
-      margin: 0 auto 25px;
+      padding: 12px;
+      margin: 0 auto 20px;
       box-shadow: 0 0 60px rgba(245, 180, 0, 0.3);
       animation: logoGlow 2s ease-in-out infinite;
     }
@@ -119,7 +119,7 @@
     
     .splash-title {
       color: var(--white);
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 900;
       letter-spacing: 2px;
     }
@@ -134,23 +134,23 @@
     
     .splash-subtitle {
       color: rgba(255,255,255,0.7);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 300;
       letter-spacing: 4px;
       text-transform: uppercase;
-      margin-top: 8px;
+      margin-top: 6px;
     }
     
     .splash-loader {
-      margin-top: 30px;
+      margin-top: 25px;
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
     }
     
     .splash-loader .dot {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: var(--gold);
       animation: dotBounce 1.4s ease-in-out infinite both;
@@ -167,9 +167,9 @@
     
     .splash-version {
       position: absolute;
-      bottom: 30px;
+      bottom: 25px;
       color: rgba(255,255,255,0.3);
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 2px;
     }
     
@@ -429,9 +429,40 @@
     }
     
     /* ============================================================
-       RESPONSIVE
+       RESPONSIVE - LOGO LEBIH KECIL DI HP
     ============================================================ */
     @media (max-width: 768px) {
+      .splash-logo {
+        width: 90px;
+        height: 90px;
+        padding: 10px;
+        margin-bottom: 15px;
+      }
+      
+      .splash-title {
+        font-size: 28px;
+      }
+      
+      .splash-subtitle {
+        font-size: 11px;
+        letter-spacing: 3px;
+      }
+      
+      .splash-loader {
+        margin-top: 20px;
+        gap: 8px;
+      }
+      
+      .splash-loader .dot {
+        width: 10px;
+        height: 10px;
+      }
+      
+      .splash-version {
+        font-size: 10px;
+        bottom: 20px;
+      }
+      
       #timerFloating {
         top: 10px;
         right: 10px;
@@ -441,8 +472,7 @@
       }
       #timerFloating .timer-icon { font-size: 13px; }
       #timerFloating .timer-dot { width: 6px; height: 6px; }
-      .splash-title { font-size: 28px; }
-      .splash-logo { width: 100px; height: 100px; }
+      
       #installOverlay { bottom: 15px; width: 92%; }
       .btn-install-bottom { 
         width: 100%; 
@@ -454,6 +484,45 @@
     }
     
     @media (max-width: 480px) {
+      .splash-logo {
+        width: 70px;
+        height: 70px;
+        padding: 8px;
+        margin-bottom: 12px;
+        box-shadow: 0 0 40px rgba(245, 180, 0, 0.25);
+      }
+      
+      @keyframes logoGlow {
+        0%, 100% { box-shadow: 0 0 40px rgba(245, 180, 0, 0.25); }
+        50% { box-shadow: 0 0 70px rgba(245, 180, 0, 0.5); }
+      }
+      
+      .splash-title {
+        font-size: 22px;
+        letter-spacing: 1px;
+      }
+      
+      .splash-subtitle {
+        font-size: 10px;
+        letter-spacing: 2px;
+        margin-top: 4px;
+      }
+      
+      .splash-loader {
+        margin-top: 15px;
+        gap: 6px;
+      }
+      
+      .splash-loader .dot {
+        width: 8px;
+        height: 8px;
+      }
+      
+      .splash-version {
+        font-size: 9px;
+        bottom: 15px;
+      }
+      
       #timerFloating {
         top: 8px;
         right: 8px;
@@ -464,15 +533,37 @@
       }
       #timerFloating .timer-icon { font-size: 11px; }
       #timerFloating .timer-dot { width: 5px; height: 5px; }
-      .splash-title { font-size: 24px; }
-      .splash-logo { width: 80px; height: 80px; }
-      .splash-subtitle { font-size: 11px; letter-spacing: 2px; }
+      
       .btn-install-bottom { 
         padding: 10px 18px; 
         font-size: 13px;
         gap: 8px;
       }
       .btn-install-bottom .install-badge { display: none; }
+    }
+    
+    /* Untuk layar sangat kecil (HP tua) */
+    @media (max-width: 360px) {
+      .splash-logo {
+        width: 60px;
+        height: 60px;
+        padding: 6px;
+        margin-bottom: 10px;
+      }
+      
+      .splash-title {
+        font-size: 18px;
+      }
+      
+      .splash-subtitle {
+        font-size: 8px;
+        letter-spacing: 1px;
+      }
+      
+      .splash-loader .dot {
+        width: 6px;
+        height: 6px;
+      }
     }
   </style>
 </head>
@@ -589,12 +680,10 @@
       const timerEl = document.getElementById('timerFloating');
       const timerDot = document.getElementById('timerDot');
       
-      // Reset classes
       timerEl.classList.remove('warning-mode', 'danger-mode');
       timerDot.classList.remove('warning', 'danger');
       
       if (timeLeft < 60 * 1000) {
-        // Kurang dari 1 menit - DANGER
         timerEl.classList.add('danger-mode');
         timerDot.classList.add('danger');
         if (!isWarningShown) {
@@ -602,24 +691,17 @@
           showToast('⚠️ Sesi akan berakhir dalam 1 menit! Segera lakukan aktivitas.', 'error');
         }
       } else if (timeLeft < 5 * 60 * 1000) {
-        // Kurang dari 5 menit - WARNING
         timerEl.classList.add('warning-mode');
         timerDot.classList.add('warning');
         if (!isWarningShown) {
           isWarningShown = true;
           showToast('⚠️ Sesi akan berakhir dalam 5 menit! Lakukan aktivitas untuk tetap login.', 'warning');
         }
-      } else {
-        timerDot.classList.remove('warning', 'danger');
       }
       
-      // Kirim update ke iframe via postMessage
       sendTimerToIframe(timeLeft);
     }
     
-    // ============================================================
-    // SEND TIMER TO IFRAME
-    // ============================================================
     function sendTimerToIframe(timeLeft) {
       const iframe = document.getElementById('appIframe');
       if (iframe && iframe.contentWindow) {
@@ -629,9 +711,7 @@
             timeLeft: timeLeft,
             formatted: formatTime(timeLeft)
           }, '*');
-        } catch(e) {
-          // Silent fail
-        }
+        } catch(e) {}
       }
     }
     
@@ -641,9 +721,6 @@
       return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
     
-    // ============================================================
-    // RESET TIMER
-    // ============================================================
     function resetSessionTimer() {
       timeLeft = SESSION_TIMEOUT;
       isWarningShown = false;
@@ -669,7 +746,6 @@
       }
     }
     
-    // Event listener untuk aktivitas user
     const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart', 'touchmove', 'pointerdown', 'pointermove'];
     events.forEach(event => {
       document.addEventListener(event, resetInactivityTimer, true);
@@ -713,7 +789,6 @@
           startTimerInterval();
         }
       } catch(e) {
-        // Cross-origin - asumsikan sudah login
         isLoggedIn = true;
         document.getElementById('installOverlay').classList.remove('show');
         showTimer();
@@ -749,32 +824,24 @@
             startTimerInterval();
           }
         }
-      } catch(e) {
-        // Cross-origin - biarkan
-      }
+      } catch(e) {}
     }
     
     // ============================================================
-    // LISTEN MESSAGE FROM IFRAME (Web App)
+    // LISTEN MESSAGE FROM IFRAME
     // ============================================================
     window.addEventListener('message', function(event) {
-      // Terima pesan dari iframe
       if (event.data && event.data.type === 'REQUEST_TIMER') {
-        // Kirim timer saat ini
         sendTimerToIframe(timeLeft);
       }
-      
       if (event.data && event.data.type === 'LOGIN_SUCCESS') {
-        // Web app memberi tahu login berhasil
         isLoggedIn = true;
         document.getElementById('installOverlay').classList.remove('show');
         showTimer();
         resetSessionTimer();
         startTimerInterval();
       }
-      
       if (event.data && event.data.type === 'LOGOUT') {
-        // Web app memberi tahu logout
         isLoggedIn = false;
         hideTimer();
         if (timerInterval) clearInterval(timerInterval);
