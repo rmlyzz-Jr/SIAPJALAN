@@ -2,7 +2,7 @@
   "name": "SIAP JALAN - Sistem Integrasi Aduan dan Penanganan Jalan",
   "short_name": "SIAP JALAN",
   "description": "Sistem Integrasi Aduan dan Penanganan Jalan - Backup & Monitoring",
-  "start_url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec",
+  "start_url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
@@ -124,7 +124,7 @@
       "name": "Input Aduan",
       "short_name": "Input",
       "description": "Tambah aduan baru",
-      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab1",
+      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab1",
       "icons": [
         {
           "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
@@ -138,7 +138,7 @@
       "name": "Daftar Aduan",
       "short_name": "Daftar",
       "description": "Lihat semua aduan",
-      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab2",
+      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab2",
       "icons": [
         {
           "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
@@ -152,7 +152,7 @@
       "name": "Dashboard",
       "short_name": "Dashboard",
       "description": "Lihat statistik",
-      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab3",
+      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab3",
       "icons": [
         {
           "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
@@ -166,7 +166,7 @@
       "name": "Rekap Pekerjaan",
       "short_name": "Rekap",
       "description": "Lihat rekap pekerjaan",
-      "url": "https://script.google.com/macros/s/AKfycbw8Ltc68JaLuUSNzJz6L5weD1_QjH8ybd5_DQCn1zW6DDf7MoUQuKpL6qsEBHn0rL4lZQ/exec#tab5",
+      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab5",
       "icons": [
         {
           "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
