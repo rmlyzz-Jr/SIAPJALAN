@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="SIAP JALAN">
   
-  <!-- Favicon / Icons -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png">
   <link rel="apple-touch-icon" href="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png">
   
@@ -73,7 +73,7 @@
     .subtitle {
       color: #6c757d;
       font-size: 13px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       letter-spacing: 1px;
     }
     
@@ -102,6 +102,19 @@
     
     .btn i {
       font-size: 18px;
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #28a745, #218838);
+    }
+    
+    .btn-success:hover {
+      box-shadow: 0 8px 25px rgba(40,167,69,0.4);
+    }
+    
+    .btn-secondary {
+      background: var(--gray-200);
+      color: #333;
     }
     
     .info {
@@ -153,6 +166,40 @@
       color: #bbb;
       margin-top: 15px;
     }
+    
+    .install-badge {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #333;
+      border: 1px solid #eee;
+    }
+    
+    .install-badge i {
+      font-size: 20px;
+      color: #F5B400;
+    }
+    
+    .install-badge .badge-text {
+      flex: 1;
+      text-align: left;
+    }
+    
+    .install-badge .badge-text small {
+      display: block;
+      color: #999;
+      font-size: 11px;
+    }
+    
+    .status-installed {
+      color: #28a745;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -168,6 +215,7 @@
   </h1>
   <p class="subtitle">Sistem Integrasi Aduan &amp; Penanganan Jalan</p>
   
+  <!-- Tombol Buka Aplikasi -->
   <a href="https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec" 
      class="btn" 
      id="openAppBtn"
@@ -177,55 +225,33 @@
     <span class="loading-text"><span class="spinner"></span> Membuka...</span>
   </a>
   
+  <!-- Tombol Install Aplikasi -->
+  <button class="btn btn-success" id="installBtn" style="margin-top:12px;display:none;">
+    <i class="fas fa-download"></i>
+    <span>Instal Aplikasi</span>
+  </button>
+  
+  <!-- Status Install -->
+  <div id="installStatus" class="install-badge" style="display:none;">
+    <i class="fas fa-check-circle" style="color:#28a745;"></i>
+    <div class="badge-text">
+      <span>Aplikasi sudah terinstal</span>
+      <small>Buka dari home screen Anda</small>
+    </div>
+  </div>
+  
+  <!-- Informasi -->
   <div class="info">
     <i class="fas fa-shield-alt" style="color:#F5B400;margin-right:5px;"></i>
-    Pastikan Anda terhubung ke internet
+    Bisa diinstal di HP dan Desktop
   </div>
   
   <div class="version">
-    v2.0.0 &bull; <a href="#" onclick="installApp()">Instal Aplikasi</a>
+    v2.1.0 &bull; <span id="installLink" style="cursor:pointer;color:#0D2F5F;font-weight:600;text-decoration:underline;">Instal Aplikasi</span>
   </div>
 </div>
 
 <script>
-  // ============================================================
-  // INSTALL APP (PWA)
-  // ============================================================
-  let deferredPrompt;
-  
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    console.log('📱 App install prompt tersedia');
-  });
-  
-  function installApp() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function(choiceResult) {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('✅ User menerima install prompt');
-        } else {
-          console.log('❌ User menolak install prompt');
-        }
-        deferredPrompt = null;
-      });
-    } else {
-      alert('Instal aplikasi hanya tersedia di browser yang mendukung PWA.\nGunakan Chrome atau Edge.');
-    }
-  }
-  
-  // ============================================================
-  // BUTTON LOADING STATE
-  // ============================================================
-  document.getElementById('openAppBtn').addEventListener('click', function(e) {
-    this.classList.add('loading');
-    setTimeout(function() {
-      // Reset setelah 3 detik
-      document.getElementById('openAppBtn').classList.remove('loading');
-    }, 3000);
-  });
-  
   // ============================================================
   // REGISTER SERVICE WORKER
   // ============================================================
@@ -238,6 +264,117 @@
         console.log('❌ Gagal mendaftar Service Worker:', err);
       });
   }
+  
+  // ============================================================
+  // INSTALL APP (PWA) - DENGAN DETEKSI YANG LEBIH BAIK
+  // ============================================================
+  let deferredPrompt;
+  const installBtn = document.getElementById('installBtn');
+  const installLink = document.getElementById('installLink');
+  const installStatus = document.getElementById('installStatus');
+  
+  // Cek apakah sudah terinstal
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    installStatus.style.display = 'flex';
+    installBtn.style.display = 'none';
+    document.querySelector('.version span').textContent = '✅ Terinstal';
+  }
+  
+  // Tangkap event beforeinstallprompt
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'flex';
+    console.log('📱 App install prompt tersedia');
+  });
+  
+  // Fungsi install
+  function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(choiceResult) {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('✅ User menerima install prompt');
+          installBtn.style.display = 'none';
+          installStatus.style.display = 'flex';
+          document.querySelector('.version span').textContent = '✅ Terinstal';
+          showToast('🎉 Aplikasi berhasil diinstal!');
+        } else {
+          console.log('❌ User menolak install prompt');
+          showToast('Instalasi dibatalkan');
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      // Fallback: arahkan ke petunjuk instalasi manual
+      showInstallGuide();
+    }
+  }
+  
+  // Tombol install
+  installBtn.addEventListener('click', installApp);
+  installLink.addEventListener('click', installApp);
+  
+  // ============================================================
+  // PETUNJUK INSTALASI MANUAL
+  // ============================================================
+  function showInstallGuide() {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    let message = '📱 Cara instal SIAP JALAN:\n\n';
+    
+    if (isMobile) {
+      message += '1. Buka Chrome / Safari\n';
+      message += '2. Klik menu (⋮ atau ⬆️)\n';
+      message += '3. Pilih "Tambahkan ke Layar Utama"\n';
+      message += '4. Klik "Tambahkan"';
+    } else {
+      message += '1. Buka Chrome / Edge\n';
+      message += '2. Klik ikon instal (📲) di address bar\n';
+      message += '3. Klik "Install"';
+    }
+    
+    alert(message);
+  }
+  
+  // ============================================================
+  // TOAST NOTIFICATION
+  // ============================================================
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      z-index: 9999;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      animation: fadeIn 0.3s;
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(function() {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s';
+      setTimeout(function() { toast.remove(); }, 300);
+    }, 3000);
+  }
+  
+  // ============================================================
+  // BUTTON LOADING STATE
+  // ============================================================
+  document.getElementById('openAppBtn').addEventListener('click', function(e) {
+    this.classList.add('loading');
+    setTimeout(function() {
+      document.getElementById('openAppBtn').classList.remove('loading');
+    }, 3000);
+  });
   
   // ============================================================
   // OFFLINE CHECK
@@ -253,7 +390,7 @@
   console.log('🚀 SIAP JALAN PWA siap digunakan!');
 </script>
 
-<!-- Font Awesome (opsional) -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </body>
