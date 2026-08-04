@@ -156,6 +156,91 @@
       margin-top: 5px;
     }
     
+    .session-info {
+      font-size: 11px;
+      color: #999;
+      margin-top: 10px;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 12px;
+    }
+    
+    .session-info span {
+      color: #0D2F5F;
+      font-weight: 600;
+    }
+    
+    /* ============================================================
+       SESSION TIMEOUT WARNING
+    ============================================================ */
+    #sessionWarning {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff3cd;
+      color: #856404;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      z-index: 1000;
+      border-left: 5px solid #ffc107;
+      animation: slideUp 0.4s ease;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(30px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    
+    #sessionWarning .warning-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    #sessionWarning .warning-text {
+      font-size: 13px;
+    }
+    
+    #sessionWarning .warning-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    
+    #sessionWarning .warning-actions button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #sessionWarning .btn-extend {
+      background: #0D2F5F;
+      color: white;
+    }
+    
+    #sessionWarning .btn-extend:hover {
+      background: #1a4a7a;
+    }
+    
+    #sessionWarning .btn-logout-now {
+      background: #dc3545;
+      color: white;
+    }
+    
+    #sessionWarning .btn-logout-now:hover {
+      background: #c82333;
+    }
+    
     /* ============================================================
        LOADING OVERLAY
     ============================================================ */
@@ -208,10 +293,30 @@
         width: 80px;
         height: 80px;
       }
+      #sessionWarning {
+        bottom: 15px;
+        padding: 14px 18px;
+      }
+      #sessionWarning .warning-actions {
+        flex-direction: column;
+        gap: 6px;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- ============================================================
+       SESSION WARNING
+  ============================================================ -->
+  <div id="sessionWarning">
+    <div class="warning-title">⏰ Sesi Akan Berakhir</div>
+    <div class="warning-text" id="warningText">Anda akan logout dalam 5 menit karena tidak ada aktivitas.</div>
+    <div class="warning-actions">
+      <button class="btn-extend" onclick="extendSession()">Lanjutkan Sesi</button>
+      <button class="btn-logout-now" onclick="logoutNow()">Logout Sekarang</button>
+    </div>
+  </div>
 
   <!-- ============================================================
        LOADING OVERLAY
@@ -259,8 +364,13 @@
       </span>
     </div>
     
-    <div style="margin-top:12px;font-size:11px;color:#ced4da;">
-      v2.3.0 &bull; 
+    <div class="session-info">
+      <i class="fas fa-clock" style="color:#F5B400;"></i>
+      Sesi berakhir setelah <span>30 menit</span> tidak aktif
+    </div>
+    
+    <div style="margin-top:8px;font-size:11px;color:#ced4da;">
+      v2.4.0 &bull; 
       <a href="#" onclick="installApp();return false;" style="color:#0D2F5F;font-weight:600;text-decoration:underline;">Instal</a>
     </div>
   </div>
@@ -270,37 +380,216 @@
     // KONFIGURASI
     // ============================================================
     const APP_URL = 'https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec';
+    const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 menit
+    const WARNING_TIME = 5 * 60 * 1000; // 5 menit sebelum logout
     
     // ============================================================
-    // ELEMEN
+    // SESSION MANAGEMENT
     // ============================================================
-    const openBtn = document.getElementById('openAppBtn');
-    const installBtn = document.getElementById('installBtn');
-    const installStatus = document.getElementById('installStatus');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-
+    let sessionTimer = null;
+    let warningTimer = null;
+    let isWarningShown = false;
+    let lastActivity = Date.now();
+    
     // ============================================================
-    // CEK APAKAH SUDAH TERINSTAL (STANDALONE)
+    // FUNGSI SESSION
     // ============================================================
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      installStatus.style.display = 'inline-block';
-      installBtn.style.display = 'none';
+    
+    // Reset timer session
+    function resetSessionTimer() {
+      lastActivity = Date.now();
+      
+      // Hapus timer yang ada
+      if (sessionTimer) {
+        clearTimeout(sessionTimer);
+        sessionTimer = null;
+      }
+      if (warningTimer) {
+        clearTimeout(warningTimer);
+        warningTimer = null;
+      }
+      
+      // Sembunyikan warning jika tampil
+      hideWarning();
+      
+      // Set timer untuk warning (5 menit sebelum logout)
+      warningTimer = setTimeout(function() {
+        showWarning();
+      }, SESSION_TIMEOUT - WARNING_TIME);
+      
+      // Set timer utama untuk logout
+      sessionTimer = setTimeout(function() {
+        performLogout();
+      }, SESSION_TIMEOUT);
+      
+      console.log('🔄 Session timer direset. Logout dalam ' + (SESSION_TIMEOUT/60000) + ' menit');
+    }
+    
+    // Tampilkan warning
+    function showWarning() {
+      if (isWarningShown) return;
+      isWarningShown = true;
+      
+      const warning = document.getElementById('sessionWarning');
+      const text = document.getElementById('warningText');
+      
+      // Hitung waktu tersisa
+      const timeLeft = Math.ceil((SESSION_TIMEOUT - (Date.now() - lastActivity)) / 60000);
+      text.textContent = 'Anda akan logout dalam ' + timeLeft + ' menit karena tidak ada aktivitas.';
+      
+      warning.style.display = 'block';
+      
+      // Countdown update setiap menit
+      let countdown = timeLeft;
+      const countdownInterval = setInterval(function() {
+        countdown--;
+        if (countdown > 0) {
+          text.textContent = 'Anda akan logout dalam ' + countdown + ' menit karena tidak ada aktivitas.';
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 60000);
+      
+      // Simpan interval untuk cleanup
+      warning._countdownInterval = countdownInterval;
+    }
+    
+    // Sembunyikan warning
+    function hideWarning() {
+      const warning = document.getElementById('sessionWarning');
+      if (warning._countdownInterval) {
+        clearInterval(warning._countdownInterval);
+        warning._countdownInterval = null;
+      }
+      warning.style.display = 'none';
+      isWarningShown = false;
+    }
+    
+    // Perpanjang session
+    function extendSession() {
+      resetSessionTimer();
+      showToast('✅ Sesi diperpanjang!');
+    }
+    
+    // Logout sekarang
+    function logoutNow() {
+      hideWarning();
+      performLogout();
+    }
+    
+    // Proses logout
+    function performLogout() {
+      console.log('🚪 Logout otomatis karena tidak aktif');
+      
+      // Bersihkan timer
+      if (sessionTimer) {
+        clearTimeout(sessionTimer);
+        sessionTimer = null;
+      }
+      if (warningTimer) {
+        clearTimeout(warningTimer);
+        warningTimer = null;
+      }
+      hideWarning();
+      
+      // Redirect ke URL logout Google Apps Script
+      // (jika ada endpoint logout) atau redirect ke halaman login
+      const logoutUrl = APP_URL + '?logout=true';
+      
+      // Jika aplikasi sedang terbuka di iframe atau tab, redirect
+      try {
+        // Coba kirim pesan ke parent window
+        window.parent.postMessage({ type: 'logout' }, '*');
+      } catch(e) {
+        // Ignore
+      }
+      
+      // Tampilkan loading
+      loadingOverlay.style.display = 'flex';
+      loadingOverlay.querySelector('p').textContent = 'Logout karena tidak aktif...';
+      
+      // Redirect ke aplikasi dengan parameter logout
+      window.location.href = logoutUrl;
+      
+      // Fallback: setelah 3 detik, refresh ke halaman utama
+      setTimeout(function() {
+        window.location.href = APP_URL;
+      }, 3000);
+    }
+    
+    // ============================================================
+    // DETEKSI AKTIVITAS USER
+    // ============================================================
+    function handleUserActivity() {
+      resetSessionTimer();
+    }
+    
+    // Event listener untuk aktivitas user
+    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart', 'touchmove'];
+    events.forEach(function(eventName) {
+      document.addEventListener(eventName, handleUserActivity);
+    });
+    
+    // Deteksi jika user kembali ke halaman (visibility change)
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        // User kembali ke tab - reset timer
+        resetSessionTimer();
+      }
+    });
+    
+    // Deteksi jika user online/offline
+    window.addEventListener('online', function() {
+      resetSessionTimer();
+    });
+    
+    // ============================================================
+    // TOAST NOTIFICATION
+    // ============================================================
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 14px;
+        z-index: 9999;
+        max-width: 90%;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        animation: fadeIn 0.3s ease;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3000);
     }
 
     // ============================================================
-    // BUKA APLIKASI - MENGGUNAKAN WINDOW.OPEN
+    // BUKA APLIKASI
     // ============================================================
+    const openBtn = document.getElementById('openAppBtn');
+    
     openBtn.addEventListener('click', function() {
-      // Tampilkan loading
       loadingOverlay.style.display = 'flex';
+      loadingOverlay.querySelector('p').textContent = 'Membuka aplikasi...';
       
-      // Buka aplikasi di tab yang sama (navigasi)
+      // Reset session sebelum buka aplikasi
+      resetSessionTimer();
+      
       window.location.href = APP_URL;
       
-      // Fallback: jika tidak berpindah dalam 3 detik, buka di tab baru
+      // Fallback
       setTimeout(function() {
         loadingOverlay.style.display = 'none';
-        // Cek apakah masih di halaman yang sama
         if (window.location.href.indexOf('siapjalan-pwa') !== -1) {
           window.open(APP_URL, '_blank');
         }
@@ -311,6 +600,13 @@
     // INSTALL APP (PWA)
     // ============================================================
     let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    const installStatus = document.getElementById('installStatus');
+    
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      installStatus.style.display = 'inline-block';
+      installBtn.style.display = 'none';
+    }
     
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
@@ -333,7 +629,6 @@
           deferredPrompt = null;
         });
       } else {
-        // Petunjuk instalasi manual
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         let msg = '📱 Cara instal SIAP JALAN:\n\n';
         if (isMobile) {
@@ -366,13 +661,13 @@
     }
 
     // ============================================================
-    // OFFLINE DETECTION
+    // START SESSION TIMER
     // ============================================================
-    window.addEventListener('offline', function() {
-      alert('📴 Anda sedang offline. Periksa koneksi internet.');
-    });
-
-    console.log('🚀 SIAP JALAN PWA v2.3 siap digunakan!');
+    // Mulai timer saat halaman dimuat
+    resetSessionTimer();
+    
+    console.log('🚀 SIAP JALAN PWA v2.4 dengan Auto-Logout siap digunakan!');
+    console.log('⏰ Session timeout: ' + (SESSION_TIMEOUT/60000) + ' menit');
   </script>
 
   <!-- Font Awesome -->
