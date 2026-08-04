@@ -6,12 +6,12 @@
   <title>SIAP JALAN</title>
   
   <!-- PWA Meta -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0D2F5F">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SIAP JALAN">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0D2F5F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SIAP JALAN">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png">
@@ -24,120 +24,75 @@
       box-sizing: border-box;
     }
     
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+    
+    /* ============================================================
+       LOADING SCREEN
+    ============================================================ */
+    #loadingScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: #0D2F5F;
-      min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      z-index: 1000;
+      transition: opacity 0.5s ease;
     }
     
-    .container {
-      width: 100%;
-      max-width: 480px;
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      text-align: center;
-      padding: 40px 30px 30px;
+    #loadingScreen.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
     
-    .logo {
-      width: 100px;
-      height: 100px;
+    #loadingScreen .logo {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       border: 4px solid #F5B400;
       padding: 8px;
       background: white;
-      margin: 0 auto 20px;
+      margin-bottom: 20px;
     }
     
-    .logo img {
+    #loadingScreen .logo img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
     
-    h1 {
-      font-size: 28px;
+    #loadingScreen h1 {
+      color: white;
+      font-size: 24px;
       font-weight: 700;
-      color: #0D2F5F;
       margin-bottom: 5px;
     }
     
-    h1 .siap { color: #0D2F5F; }
-    h1 .jalan { color: #F5B400; }
+    #loadingScreen h1 .siap { color: #F5B400; }
+    #loadingScreen h1 .jalan { color: white; }
     
-    .subtitle {
-      color: #6c757d;
-      font-size: 13px;
-      margin-bottom: 25px;
-      letter-spacing: 1px;
-    }
-    
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 32px;
-      background: linear-gradient(135deg, #0D2F5F, #1a4a7a);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      width: 100%;
-      justify-content: center;
-    }
-    
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(13,47,95,0.4);
-    }
-    
-    .btn i {
-      font-size: 18px;
-    }
-    
-    .btn-success {
-      background: linear-gradient(135deg, #28a745, #218838);
-    }
-    
-    .btn-success:hover {
-      box-shadow: 0 8px 25px rgba(40,167,69,0.4);
-    }
-    
-    .btn-secondary {
-      background: var(--gray-200);
-      color: #333;
-    }
-    
-    .info {
-      margin-top: 20px;
+    #loadingScreen .sub {
+      color: rgba(255,255,255,0.6);
       font-size: 12px;
-      color: #999;
-      border-top: 1px solid #eee;
-      padding-top: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
     }
     
-    .info a {
-      color: #0D2F5F;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    
-    .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-top: 3px solid white;
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top: 4px solid #F5B400;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -147,252 +102,280 @@
       100% { transform: rotate(360deg); }
     }
     
-    .loading-text {
-      display: none;
-      color: #0D2F5F;
-      font-size: 14px;
+    #loadingScreen .progress-text {
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
       margin-top: 15px;
     }
     
-    .btn.loading .btn-text {
+    /* ============================================================
+       IFRAME CONTAINER
+    ============================================================ */
+    #appContainer {
+      width: 100%;
+      height: 100%;
       display: none;
     }
     
-    .btn.loading .loading-text {
-      display: inline;
+    #appContainer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
     }
     
-    .version {
-      font-size: 11px;
-      color: #bbb;
-      margin-top: 15px;
-    }
-    
-    .install-badge {
+    /* ============================================================
+       ERROR SCREEN
+    ============================================================ */
+    #errorScreen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: #f8f9fa;
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 15px;
-      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
+      flex-direction: column;
+      padding: 30px;
+      text-align: center;
+      z-index: 999;
+    }
+    
+    #errorScreen i {
+      font-size: 48px;
+      color: #dc3545;
+      margin-bottom: 20px;
+    }
+    
+    #errorScreen h2 {
       color: #333;
-      border: 1px solid #eee;
+      margin-bottom: 10px;
     }
     
-    .install-badge i {
-      font-size: 20px;
-      color: #F5B400;
+    #errorScreen p {
+      color: #666;
+      max-width: 400px;
+      margin-bottom: 20px;
+      line-height: 1.6;
     }
     
-    .install-badge .badge-text {
-      flex: 1;
-      text-align: left;
-    }
-    
-    .install-badge .badge-text small {
-      display: block;
-      color: #999;
-      font-size: 11px;
-    }
-    
-    .status-installed {
-      color: #28a745;
+    #errorScreen .btn {
+      padding: 12px 30px;
+      background: #0D2F5F;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
       font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #errorScreen .btn:hover {
+      background: #1a4a7a;
+      transform: translateY(-2px);
+    }
+    
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      #loadingScreen .logo {
+        width: 60px;
+        height: 60px;
+      }
+      #loadingScreen h1 {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="logo">
-    <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="Logo SIAP JALAN">
-  </div>
-  
-  <h1>
-    <span class="siap">SIAP</span>
-    <span class="jalan">JALAN</span>
-  </h1>
-  <p class="subtitle">Sistem Integrasi Aduan &amp; Penanganan Jalan</p>
-  
-  <!-- Tombol Buka Aplikasi -->
-  <a href="https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec" 
-     class="btn" 
-     id="openAppBtn"
-     target="_blank">
-    <i class="fas fa-rocket"></i>
-    <span class="btn-text">Buka Aplikasi</span>
-    <span class="loading-text"><span class="spinner"></span> Membuka...</span>
-  </a>
-  
-  <!-- Tombol Install Aplikasi -->
-  <button class="btn btn-success" id="installBtn" style="margin-top:12px;display:none;">
-    <i class="fas fa-download"></i>
-    <span>Instal Aplikasi</span>
-  </button>
-  
-  <!-- Status Install -->
-  <div id="installStatus" class="install-badge" style="display:none;">
-    <i class="fas fa-check-circle" style="color:#28a745;"></i>
-    <div class="badge-text">
-      <span>Aplikasi sudah terinstal</span>
-      <small>Buka dari home screen Anda</small>
+  <!-- ============================================================
+       LOADING SCREEN
+  ============================================================ -->
+  <div id="loadingScreen">
+    <div class="logo">
+      <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="Logo SIAP JALAN">
     </div>
+    <h1>
+      <span class="siap">SIAP</span>
+      <span class="jalan">JALAN</span>
+    </h1>
+    <div class="sub">Binamarga</div>
+    <div class="loader"></div>
+    <div class="progress-text" id="progressText">Memuat aplikasi...</div>
   </div>
-  
-  <!-- Informasi -->
-  <div class="info">
-    <i class="fas fa-shield-alt" style="color:#F5B400;margin-right:5px;"></i>
-    Bisa diinstal di HP dan Desktop
-  </div>
-  
-  <div class="version">
-    v2.1.0 &bull; <span id="installLink" style="cursor:pointer;color:#0D2F5F;font-weight:600;text-decoration:underline;">Instal Aplikasi</span>
-  </div>
-</div>
 
-<script>
-  // ============================================================
-  // REGISTER SERVICE WORKER
-  // ============================================================
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(function(reg) {
-        console.log('✅ Service Worker terdaftar!', reg);
-      })
-      .catch(function(err) {
-        console.log('❌ Gagal mendaftar Service Worker:', err);
+  <!-- ============================================================
+       ERROR SCREEN
+  ============================================================ -->
+  <div id="errorScreen">
+    <i class="fas fa-wifi"></i>
+    <h2>Koneksi Terputus</h2>
+    <p>Periksa koneksi internet Anda untuk mengakses SIAP JALAN.</p>
+    <button class="btn" onclick="reloadApp()">
+      <i class="fas fa-sync" style="margin-right:8px;"></i> Coba Lagi
+    </button>
+  </div>
+
+  <!-- ============================================================
+       IFRAME CONTAINER
+  ============================================================ -->
+  <div id="appContainer">
+    <iframe id="appIframe" src="about:blank"></iframe>
+  </div>
+
+  <script>
+    // ============================================================
+    // KONFIGURASI
+    // ============================================================
+    const APP_URL = 'https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec';
+    const LOADING_TIMEOUT = 15000; // 15 detik
+    let loadTimeout;
+
+    // ============================================================
+    // ELEMEN
+    // ============================================================
+    const loadingScreen = document.getElementById('loadingScreen');
+    const appContainer = document.getElementById('appContainer');
+    const errorScreen = document.getElementById('errorScreen');
+    const iframe = document.getElementById('appIframe');
+    const progressText = document.getElementById('progressText');
+
+    // ============================================================
+    // LOAD APP
+    // ============================================================
+    function loadApp() {
+      progressText.textContent = 'Menyiapkan aplikasi...';
+      
+      // Set timeout untuk loading
+      loadTimeout = setTimeout(function() {
+        progressText.textContent = 'Loading memakan waktu lebih lama...';
+        // Coba lagi setelah 5 detik
+        setTimeout(function() {
+          if (loadingScreen.style.display !== 'none') {
+            progressText.textContent = 'Masih memuat...';
+          }
+        }, 5000);
+      }, 5000);
+
+      // Load iframe
+      iframe.src = APP_URL;
+      
+      // Event listener untuk iframe
+      iframe.addEventListener('load', function() {
+        clearTimeout(loadTimeout);
+        loadingScreen.classList.add('hidden');
+        setTimeout(function() {
+          loadingScreen.style.display = 'none';
+          appContainer.style.display = 'block';
+          progressText.textContent = 'Aplikasi siap digunakan!';
+        }, 500);
       });
-  }
-  
-  // ============================================================
-  // INSTALL APP (PWA) - DENGAN DETEKSI YANG LEBIH BAIK
-  // ============================================================
-  let deferredPrompt;
-  const installBtn = document.getElementById('installBtn');
-  const installLink = document.getElementById('installLink');
-  const installStatus = document.getElementById('installStatus');
-  
-  // Cek apakah sudah terinstal
-  if (window.matchMedia('(display-mode: standalone)').matches) {
-    installStatus.style.display = 'flex';
-    installBtn.style.display = 'none';
-    document.querySelector('.version span').textContent = '✅ Terinstal';
-  }
-  
-  // Tangkap event beforeinstallprompt
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'flex';
-    console.log('📱 App install prompt tersedia');
-  });
-  
-  // Fungsi install
-  function installApp() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function(choiceResult) {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('✅ User menerima install prompt');
-          installBtn.style.display = 'none';
-          installStatus.style.display = 'flex';
-          document.querySelector('.version span').textContent = '✅ Terinstal';
-          showToast('🎉 Aplikasi berhasil diinstal!');
-        } else {
-          console.log('❌ User menolak install prompt');
-          showToast('Instalasi dibatalkan');
+
+      // Error handling - jika iframe gagal load
+      iframe.addEventListener('error', function() {
+        clearTimeout(loadTimeout);
+        showError('Gagal memuat aplikasi');
+      });
+
+      // Fallback: jika loading terlalu lama
+      setTimeout(function() {
+        if (loadingScreen.style.display !== 'none') {
+          // Cek apakah iframe sudah mulai loading
+          try {
+            if (iframe.contentWindow.location.href === 'about:blank') {
+              showError('Waktu muat habis. Periksa koneksi Anda.');
+            }
+          } catch(e) {
+            // Cross-origin, biarkan saja
+          }
         }
-        deferredPrompt = null;
-      });
-    } else {
-      // Fallback: arahkan ke petunjuk instalasi manual
-      showInstallGuide();
+      }, LOADING_TIMEOUT);
     }
-  }
-  
-  // Tombol install
-  installBtn.addEventListener('click', installApp);
-  installLink.addEventListener('click', installApp);
-  
-  // ============================================================
-  // PETUNJUK INSTALASI MANUAL
-  // ============================================================
-  function showInstallGuide() {
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    let message = '📱 Cara instal SIAP JALAN:\n\n';
-    
-    if (isMobile) {
-      message += '1. Buka Chrome / Safari\n';
-      message += '2. Klik menu (⋮ atau ⬆️)\n';
-      message += '3. Pilih "Tambahkan ke Layar Utama"\n';
-      message += '4. Klik "Tambahkan"';
-    } else {
-      message += '1. Buka Chrome / Edge\n';
-      message += '2. Klik ikon instal (📲) di address bar\n';
-      message += '3. Klik "Install"';
-    }
-    
-    alert(message);
-  }
-  
-  // ============================================================
-  // TOAST NOTIFICATION
-  // ============================================================
-  function showToast(message) {
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #333;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-size: 14px;
-      z-index: 9999;
-      max-width: 90%;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      animation: fadeIn 0.3s;
-    `;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(function() {
-      toast.style.opacity = '0';
-      toast.style.transition = 'opacity 0.3s';
-      setTimeout(function() { toast.remove(); }, 300);
-    }, 3000);
-  }
-  
-  // ============================================================
-  // BUTTON LOADING STATE
-  // ============================================================
-  document.getElementById('openAppBtn').addEventListener('click', function(e) {
-    this.classList.add('loading');
-    setTimeout(function() {
-      document.getElementById('openAppBtn').classList.remove('loading');
-    }, 3000);
-  });
-  
-  // ============================================================
-  // OFFLINE CHECK
-  // ============================================================
-  window.addEventListener('online', function() {
-    console.log('🌐 Kembali online');
-  });
-  
-  window.addEventListener('offline', function() {
-    console.log('📴 Offline mode');
-  });
-  
-  console.log('🚀 SIAP JALAN PWA siap digunakan!');
-</script>
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    // ============================================================
+    // SHOW ERROR
+    // ============================================================
+    function showError(message) {
+      clearTimeout(loadTimeout);
+      loadingScreen.style.display = 'none';
+      errorScreen.style.display = 'flex';
+      document.querySelector('#errorScreen p').textContent = message || 'Periksa koneksi internet Anda.';
+    }
+
+    // ============================================================
+    // RELOAD APP
+    // ============================================================
+    function reloadApp() {
+      errorScreen.style.display = 'none';
+      loadingScreen.style.display = 'flex';
+      loadingScreen.classList.remove('hidden');
+      progressText.textContent = 'Mencoba memuat ulang...';
+      iframe.src = 'about:blank';
+      setTimeout(function() {
+        loadApp();
+      }, 500);
+    }
+
+    // ============================================================
+    // REGISTER SERVICE WORKER
+    // ============================================================
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(function(reg) {
+          console.log('✅ Service Worker terdaftar!', reg);
+        })
+        .catch(function(err) {
+          console.log('❌ Gagal Service Worker:', err);
+        });
+    }
+
+    // ============================================================
+    // INSTALL APP (PWA)
+    // ============================================================
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('📱 App install prompt tersedia');
+    });
+
+    // ============================================================
+    // OFFLINE / ONLINE DETECTION
+    // ============================================================
+    window.addEventListener('online', function() {
+      console.log('🌐 Kembali online');
+      if (errorScreen.style.display === 'flex') {
+        reloadApp();
+      }
+    });
+    
+    window.addEventListener('offline', function() {
+      console.log('📴 Offline mode');
+      showError('Anda sedang offline. Periksa koneksi internet.');
+    });
+
+    // ============================================================
+    // START APP
+    // ============================================================
+    // Cek koneksi awal
+    if (!navigator.onLine) {
+      showError('Anda sedang offline. Periksa koneksi internet.');
+    } else {
+      loadApp();
+    }
+
+    console.log('🚀 SIAP JALAN PWA v2.2 siap digunakan!');
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </body>
 </html>
