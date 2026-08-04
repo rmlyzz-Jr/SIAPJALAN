@@ -2,7 +2,7 @@
   "name": "SIAP JALAN",
   "short_name": "SiapJalan",
   "description": "Sistem Integrasi Aduan dan Penanganan Jalan Binamarga",
-  "start_url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0D2F5F",
@@ -49,22 +49,10 @@
   ],
   "shortcuts": [
     {
-      "name": "Input Aduan",
-      "short_name": "Input",
-      "description": "Buka form input aduan",
-      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec"
-    },
-    {
-      "name": "Daftar Aduan",
-      "short_name": "Daftar",
-      "description": "Lihat daftar aduan",
-      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec"
-    },
-    {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "Lihat statistik",
-      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec"
+      "name": "Buka Aplikasi",
+      "short_name": "Buka",
+      "description": "Buka aplikasi SIAP JALAN",
+      "url": "/"
     }
   ],
   "display_override": ["standalone", "minimal-ui"],
