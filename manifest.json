@@ -1,183 +1,68 @@
 {
-  "name": "SIAP JALAN - Sistem Integrasi Aduan dan Penanganan Jalan",
+  "name": "SIAP JALAN - Sistem Aduan & Penanganan Jalan",
   "short_name": "SIAP JALAN",
-  "description": "Sistem Integrasi Aduan dan Penanganan Jalan - Backup & Monitoring",
+  "description": "Sistem Integrasi Aduan dan Penanganan Jalan Binamarga",
   "start_url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec",
-  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0D2F5F",
   "background_color": "#0D2F5F",
-  "categories": ["productivity", "business", "utilities"],
-  
+  "categories": ["productivity", "government", "utilities"],
+  "lang": "id",
   "icons": [
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable",
-      "description": "Desktop & Splash Screen"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable",
-      "description": "Tablet - iPad, Android Tablet"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "256x256",
-      "type": "image/png",
-      "purpose": "any maskable",
-      "description": "Tablet Kecil"
+      "purpose": "any maskable"
     },
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable",
-      "description": "HP Android - dengan padding 15%"
+      "purpose": "any maskable"
     },
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "HP Android - tanpa padding"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "iPhone - dengan padding 20%"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "167x167",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "iPhone (iPad mini)"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "iPhone (iPad)"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "Tablet Android"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "120x120",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "iPhone (Retina)"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "Smartwatch - Apple Watch, Wear OS"
-    },
-    {
-      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "Smartwatch Kecil"
+      "sizes": "128x128",
+      "type": "image/png"
     },
     {
       "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
       "sizes": "64x64",
-      "type": "image/png",
-      "purpose": "any",
-      "description": "Favicon / Shortcut"
-    }
-  ],
-  
-  "screenshots": [
-    {
-      "src": "https://via.placeholder.com/1280x720/0D2F5F/FFFFFF?text=SIAP+JALAN+Dashboard",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
+      "type": "image/png"
     },
     {
-      "src": "https://via.placeholder.com/750x1334/0D2F5F/FFFFFF?text=SIAP+JALAN+Mobile",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow"
+      "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
+      "sizes": "32x32",
+      "type": "image/png"
     }
   ],
-  
+  "screenshots": [
+    {
+      "src": "https://i.ibb.co.com/ymJxJr64/Chat-GPT-Image-Jul-5-2026-01-13-27-AM.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Dashboard SIAP JALAN"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Input Aduan",
       "short_name": "Input",
-      "description": "Tambah aduan baru",
-      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab1",
-      "icons": [
-        {
-          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-          "sizes": "96x96",
-          "type": "image/png",
-          "purpose": "any"
-        }
-      ]
+      "description": "Buka form input aduan",
+      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec"
     },
     {
       "name": "Daftar Aduan",
       "short_name": "Daftar",
-      "description": "Lihat semua aduan",
-      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab2",
-      "icons": [
-        {
-          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-          "sizes": "96x96",
-          "type": "image/png",
-          "purpose": "any"
-        }
-      ]
-    },
-    {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "Lihat statistik",
-      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab3",
-      "icons": [
-        {
-          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-          "sizes": "96x96",
-          "type": "image/png",
-          "purpose": "any"
-        }
-      ]
-    },
-    {
-      "name": "Rekap Pekerjaan",
-      "short_name": "Rekap",
-      "description": "Lihat rekap pekerjaan",
-      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec#tab5",
-      "icons": [
-        {
-          "src": "https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png",
-          "sizes": "96x96",
-          "type": "image/png",
-          "purpose": "any"
-        }
-      ]
+      "description": "Lihat daftar aduan",
+      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec"
     }
   ],
-  
+  "display_override": ["standalone", "minimal-ui"],
+  "prefer_related_applications": false,
   "related_applications": [],
-  "prefer_related_applications": false
+  "scope": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/"
 }
