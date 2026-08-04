@@ -1,626 +1,702 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SIAP JALAN</title>
-  
-  <!-- PWA Meta -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0D2F5F">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="SIAP JALAN">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png">
-  <link rel="apple-touch-icon" href="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png">
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: #0D2F5F;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    
-    .container {
-      width: 100%;
-      max-width: 440px;
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-      text-align: center;
-      padding: 45px 30px 35px;
-    }
-    
-    .logo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 4px solid #F5B400;
-      padding: 8px;
-      background: white;
-      margin: 0 auto 18px;
-      box-shadow: 0 4px 20px rgba(245,180,0,0.2);
-    }
-    
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    
-    h1 {
-      font-size: 32px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-    
-    h1 .siap { color: #0D2F5F; }
-    h1 .jalan { color: #F5B400; }
-    
-    .subtitle {
-      color: #6c757d;
-      font-size: 13px;
-      margin-bottom: 5px;
-      letter-spacing: 1px;
-    }
-    
-    .badge {
-      display: inline-block;
-      background: #F5B400;
-      color: #0D2F5F;
-      padding: 3px 16px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 25px;
-    }
-    
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 16px 32px;
-      background: linear-gradient(135deg, #0D2F5F, #1a4a7a);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      width: 100%;
-    }
-    
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(13,47,95,0.4);
-    }
-    
-    .btn:active {
-      transform: scale(0.97);
-    }
-    
-    .btn i {
-      font-size: 20px;
-    }
-    
-    .btn-success {
-      background: linear-gradient(135deg, #28a745, #1e7e34);
-      margin-top: 12px;
-    }
-    
-    .btn-success:hover {
-      box-shadow: 0 10px 30px rgba(40,167,69,0.4);
-    }
-    
-    .info {
-      margin-top: 20px;
-      font-size: 12px;
-      color: #adb5bd;
-      border-top: 1px solid #f0f0f0;
-      padding-top: 18px;
-      line-height: 1.8;
-    }
-    
-    .info i {
-      color: #F5B400;
-      margin-right: 4px;
-    }
-    
-    .status-badge {
-      display: inline-block;
-      background: #e8f5e9;
-      color: #2e7d32;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-    
-    .session-info {
-      font-size: 11px;
-      color: #999;
-      margin-top: 10px;
-      border-top: 1px solid #f0f0f0;
-      padding-top: 12px;
-    }
-    
-    .session-info span {
-      color: #0D2F5F;
-      font-weight: 600;
-    }
-    
-    /* SESSION TIMEOUT WARNING */
-    #sessionWarning {
-      display: none;
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fff3cd;
-      color: #856404;
-      padding: 16px 24px;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      z-index: 1000;
-      border-left: 5px solid #ffc107;
-      animation: slideUp 0.4s ease;
-    }
-    
-    @keyframes slideUp {
-      from { transform: translateX(-50%) translateY(30px); opacity: 0; }
-      to { transform: translateX(-50%) translateY(0); opacity: 1; }
-    }
-    
-    #sessionWarning .warning-title {
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    
-    #sessionWarning .warning-text {
-      font-size: 13px;
-    }
-    
-    #sessionWarning .warning-actions {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-    
-    #sessionWarning .warning-actions button {
-      padding: 8px 20px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    
-    #sessionWarning .btn-extend {
-      background: #0D2F5F;
-      color: white;
-    }
-    
-    #sessionWarning .btn-extend:hover {
-      background: #1a4a7a;
-    }
-    
-    #sessionWarning .btn-logout-now {
-      background: #dc3545;
-      color: white;
-    }
-    
-    #sessionWarning .btn-logout-now:hover {
-      background: #c82333;
-    }
-    
-    /* LOADING OVERLAY */
-    #loadingOverlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(13,47,95,0.92);
-      z-index: 999;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    
-    #loadingOverlay .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(255,255,255,0.2);
-      border-top: 5px solid #F5B400;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    #loadingOverlay p {
-      color: white;
-      margin-top: 20px;
-      font-size: 14px;
-      opacity: 0.8;
-    }
-    
-    @media (max-width: 480px) {
-      .container {
-        padding: 30px 20px 25px;
-      }
-      h1 {
-        font-size: 26px;
-      }
-      .logo {
-        width: 80px;
-        height: 80px;
-      }
-      #sessionWarning {
-        bottom: 15px;
-        padding: 14px 18px;
-      }
-      #sessionWarning .warning-actions {
-        flex-direction: column;
-        gap: 6px;
-      }
-    }
-  </style>
-</head>
-<body>
+// ============================================================
+// KONFIGURASI SPREADSHEET
+// ============================================================
+const SPREADSHEET_ID = '1p6KsVDerY2eogOI9JwF4Ja2q2M-0yADL5IZ4OAF8Jos';
+const SHEET_ADUAN = 'BINAMARGA';
+const SHEET_TIM = 'TIM_BM';
+const SHEET_USER = 'USER_BM';
+const SHEET_PEKERJAAN = 'PEKERJAAN_BM';
+const SHEET_CHEKLIST = 'CHEKLIST_BM';
+const SHEET_MASTER_STATUS = 'MASTER STATUS';
 
-  <!-- SESSION WARNING -->
-  <div id="sessionWarning">
-    <div class="warning-title">⏰ Sesi Akan Berakhir</div>
-    <div class="warning-text" id="warningText">Anda akan logout dalam 5 menit karena tidak ada aktivitas.</div>
-    <div class="warning-actions">
-      <button class="btn-extend" onclick="extendSession()">Lanjutkan Sesi</button>
-      <button class="btn-logout-now" onclick="logoutNow()">Logout Sekarang</button>
-    </div>
-  </div>
+const COL_TANGGAL = 0;
+const COL_KODE_LAPORAN = 1;
+const COL_DESKRIPSI = 2;
+const COL_PEMOHON = 3;
+const COL_DETAIL_LOKASI = 4;
+const COL_ASAL_MEDIA = 5;
+const COL_STATUS = 6;
+const COL_NOTES = 7;
+const COL_GAMBAR = 8;
+const COL_TIM = 9;
+const COL_PIC = 10;
+const COL_JADWAL = 11;
+const COL_TINDAK_LANJUT = 12;
+const COL_KETERANGAN = 13;
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingOverlay">
-    <div class="spinner"></div>
-    <p>Membuka aplikasi...</p>
-  </div>
+const COL_NAMA_PEKERJAAN = 0;
+const COL_PAGU = 1;
+const COL_PPK = 2;
+const COL_PPTK = 3;
+const COL_PENGAWAS = 4;
+const COL_ADMIN = 5;
+const COL_PERENCANA = 6;
+const COL_PEJABAT_PENGADAAN = 7;
+const COL_TANGGAL_AWAL = 8;
+const COL_TANGGAL_AKHIR = 9;
+const COL_NOMOR_KONTRAK = 10;
+const COL_JENIS_PEKERJAAN = 11;
+const COL_TAHUN = 12;
+const COL_KETERANGAN_PEKERJAAN = 13;
+const COL_KODE_RUP = 14;
+const COL_HPS = 15;
+const COL_PENYEDIA = 16;
+const COL_HARGA_TERKONTRAK = 17;
+const COL_TANGGAL_SPPBJ = 18;
+const COL_NOMOR_SPPBJ = 19;
+const COL_TANGGAL_SPK = 20;
+const COL_NOMOR_SPK = 21;
+const COL_TANGGAL_SPMK = 22;
+const COL_NOMOR_SPMK = 23;
+const COL_BAP = 24;
+const COL_BAST = 25;
 
-  <!-- MAIN CARD -->
-  <div class="container">
-    <div class="logo">
-      <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="Logo SIAP JALAN">
-    </div>
-    
-    <h1>
-      <span class="siap">SIAP</span>
-      <span class="jalan">JALAN</span>
-    </h1>
-    <p class="subtitle">Sistem Integrasi Aduan &amp; Penanganan Jalan</p>
-    <div class="badge">Binamarga</div>
-    
-    <!-- Tombol Buka Aplikasi -->
-    <button class="btn" id="openAppBtn">
-      <i class="fas fa-rocket"></i>
-      Buka Aplikasi
-    </button>
-    
-    <!-- Tombol Install -->
-    <button class="btn btn-success" id="installBtn" style="display:none;">
-      <i class="fas fa-download"></i>
-      Instal Aplikasi
-    </button>
-    
-    <!-- Status -->
-    <div class="info">
-      <i class="fas fa-shield-alt"></i> Aman &amp; Terpercaya
-      <br>
-      <i class="fas fa-mobile-alt"></i> Dapat diinstal di HP
-      <br>
-      <span id="installStatus" style="display:none;" class="status-badge">
-        <i class="fas fa-check-circle"></i> Sudah Terinstal
-      </span>
-    </div>
-    
-    <div class="session-info">
-      <i class="fas fa-clock" style="color:#F5B400;"></i>
-      Sesi berakhir setelah <span>30 menit</span> tidak aktif
-    </div>
-    
-    <div style="margin-top:8px;font-size:11px;color:#ced4da;">
-      v2.5.0 &bull; 
-      <a href="#" onclick="installApp();return false;" style="color:#0D2F5F;font-weight:600;text-decoration:underline;">Instal</a>
-    </div>
-  </div>
+// ============================================================
+// DO GET
+// ============================================================
+function doGet(e) {
+  try {
+    if (e && e.parameter && e.parameter.logout === 'true') {
+      return doLogout();
+    }
+    ensureSheetsExist();
+    var html = HtmlService.createHtmlOutputFromFile('Index');
+    html.setTitle('SIAP JALAN');
+    html.addMetaTag('viewport', 'width=device-width, initial-scale=1');
+    html.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    return html;
+  } catch (error) {
+    return HtmlService.createHtmlOutput('<h1>Error</h1><p>' + error.message + '</p>');
+  }
+}
 
-  <script>
-    // ============================================================
-    // KONFIGURASI - URL WEB APP BARU
-    // ============================================================
-    const APP_URL = 'https://script.google.com/macros/s/AKfycbz5Pn7HXfpr_mMt6w3mTGKmrgxOhRx_dsxOznrY11koXkiys6kGoMsvz_AV6ZmdNAEQXg/exec';
-    const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 menit
-    const WARNING_TIME = 5 * 60 * 1000; // 5 menit sebelum logout
+// ============================================================
+// ENSURE SHEETS EXIST
+// ============================================================
+function ensureSheetsExist() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     
-    // ============================================================
-    // SESSION MANAGEMENT
-    // ============================================================
-    let sessionTimer = null;
-    let warningTimer = null;
-    let isWarningShown = false;
-    let lastActivity = Date.now();
-    
-    function resetSessionTimer() {
-      lastActivity = Date.now();
-      
-      if (sessionTimer) {
-        clearTimeout(sessionTimer);
-        sessionTimer = null;
-      }
-      if (warningTimer) {
-        clearTimeout(warningTimer);
-        warningTimer = null;
-      }
-      
-      hideWarning();
-      
-      warningTimer = setTimeout(function() {
-        showWarning();
-      }, SESSION_TIMEOUT - WARNING_TIME);
-      
-      sessionTimer = setTimeout(function() {
-        performLogout();
-      }, SESSION_TIMEOUT);
-      
-      console.log('🔄 Session timer direset. Logout dalam ' + (SESSION_TIMEOUT/60000) + ' menit');
+    var sheet = ss.getSheetByName(SHEET_ADUAN);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_ADUAN);
+      var headers = ['TANGGAL', 'KODE LAPORAN', 'DESKRIPSI', 'PEMOHON', 'DETAIL LOKASI', 'ASAL MEDIA', 'STATUS', 'NOTES', 'GAMBAR', 'TIM', 'PIC', 'JADWAL', 'TINDAK LANJUT', 'KETERANGAN'];
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+      sheet.setFrozenRows(1);
     }
     
-    function showWarning() {
-      if (isWarningShown) return;
-      isWarningShown = true;
-      
-      const warning = document.getElementById('sessionWarning');
-      const text = document.getElementById('warningText');
-      
-      const timeLeft = Math.ceil((SESSION_TIMEOUT - (Date.now() - lastActivity)) / 60000);
-      text.textContent = 'Anda akan logout dalam ' + timeLeft + ' menit karena tidak ada aktivitas.';
-      
-      warning.style.display = 'block';
-      
-      let countdown = timeLeft;
-      const countdownInterval = setInterval(function() {
-        countdown--;
-        if (countdown > 0) {
-          text.textContent = 'Anda akan logout dalam ' + countdown + ' menit karena tidak ada aktivitas.';
-        } else {
-          clearInterval(countdownInterval);
-        }
-      }, 60000);
-      
-      warning._countdownInterval = countdownInterval;
+    sheet = ss.getSheetByName(SHEET_TIM);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_TIM);
+      sheet.getRange(1, 1, 1, 2).setValues([['TIM', 'PIC']]);
+      sheet.getRange(1, 1, 1, 2).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+      var defaultTim = [['Tim Jalan Nasional', 'Budi Santoso'], ['Tim Jalan Provinsi', 'Siti Rahayu'], ['Tim Jalan Kabupaten', 'Ahmad Fauzi'], ['Tim Pemeliharaan', 'Dewi Lestari'], ['Tim Konstruksi', 'Rudi Hartono']];
+      sheet.getRange(2, 1, defaultTim.length, 2).setValues(defaultTim);
+      sheet.setFrozenRows(1);
     }
     
-    function hideWarning() {
-      const warning = document.getElementById('sessionWarning');
-      if (warning._countdownInterval) {
-        clearInterval(warning._countdownInterval);
-        warning._countdownInterval = null;
-      }
-      warning.style.display = 'none';
-      isWarningShown = false;
+    sheet = ss.getSheetByName(SHEET_USER);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_USER);
+      sheet.getRange(1, 1, 1, 4).setValues([['USER', 'PASSWORD', 'ROLE', 'TIM']]);
+      sheet.getRange(1, 1, 1, 4).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+      var defaultUsers = [['admin', 'admin123', 'admin', ''], ['operator1', 'op123', 'operator', 'Tim Jalan Nasional'], ['operator2', 'op123', 'operator', 'Tim Jalan Provinsi']];
+      sheet.getRange(2, 1, defaultUsers.length, 4).setValues(defaultUsers);
+      sheet.setFrozenRows(1);
     }
     
-    function extendSession() {
-      resetSessionTimer();
-      showToast('✅ Sesi diperpanjang!');
+    sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_PEKERJAAN);
+      var headersPekerjaan = ['NAMA PEKERJAAN', 'PAGU', 'PPK', 'PPTK', 'PENGAWAS', 'ADMIN', 'PERENCANA', 'PEJABAT PENGADAAN', 'TANGGAL AWAL', 'TANGGAL AKHIR', 'NOMOR KONTRAK', 'JENIS PEKERJAAN', 'TAHUN', 'KETERANGAN', 'KODE RUP', 'HPS', 'PENYEDIA', 'HARGA TERKONTRAK', 'TANGGAL SPPBJ', 'NOMOR SPPBJ', 'TANGGAL SPK', 'NOMOR SPK', 'TANGGAL SPMK', 'NOMOR SPMK', 'BAP', 'BAST'];
+      sheet.getRange(1, 1, 1, headersPekerjaan.length).setValues([headersPekerjaan]);
+      sheet.getRange(1, 1, 1, headersPekerjaan.length).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+      sheet.setFrozenRows(1);
     }
     
-    function logoutNow() {
-      hideWarning();
-      performLogout();
+    sheet = ss.getSheetByName(SHEET_CHEKLIST);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_CHEKLIST);
+      var headersCheklist = ['NAMA PEKERJAAN', 'SOFT RAB DAN GAMBAR', 'SOFT RAB EXCEL', 'SOFT SPEKTEK', 'KETERANGAN (SOFT)', 'HARD RAB DAN GAMBAR', 'HARD RAB', 'KETERANGAN (HARD)', 'REVISI GAMBAR', 'REVISI RAB', 'TANGGAL', 'USER', 'STATUS'];
+      sheet.getRange(1, 1, 1, headersCheklist.length).setValues([headersCheklist]);
+      sheet.getRange(1, 1, 1, headersCheklist.length).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+      sheet.setFrozenRows(1);
     }
     
-    function performLogout() {
-      console.log('🚪 Logout otomatis karena tidak aktif');
-      
-      if (sessionTimer) {
-        clearTimeout(sessionTimer);
-        sessionTimer = null;
-      }
-      if (warningTimer) {
-        clearTimeout(warningTimer);
-        warningTimer = null;
-      }
-      hideWarning();
-      
-      loadingOverlay.style.display = 'flex';
-      loadingOverlay.querySelector('p').textContent = 'Logout...';
-      
-      window.location.href = APP_URL + '?logout=true';
-      
-      setTimeout(function() {
-        loadingOverlay.style.display = 'none';
-        window.location.href = APP_URL;
-      }, 3000);
+    sheet = ss.getSheetByName(SHEET_MASTER_STATUS);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_MASTER_STATUS);
+      sheet.getRange(1, 1, 1, 1).setValues([['STATUS']]);
+      sheet.getRange(1, 1, 1, 1).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+      var defaultStatus = [['Baru'], ['Proses'], ['Selesai'], ['Ditolak'], ['Ditunda']];
+      sheet.getRange(2, 1, defaultStatus.length, 1).setValues(defaultStatus);
+      sheet.setFrozenRows(1);
     }
-    
-    // ============================================================
-    // DETEKSI AKTIVITAS USER
-    // ============================================================
-    function handleUserActivity() {
-      resetSessionTimer();
-    }
-    
-    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart', 'touchmove'];
-    events.forEach(function(eventName) {
-      document.addEventListener(eventName, handleUserActivity);
-    });
-    
-    document.addEventListener('visibilitychange', function() {
-      if (!document.hidden) {
-        resetSessionTimer();
-      }
-    });
-    
-    window.addEventListener('online', function() {
-      resetSessionTimer();
-    });
-    
-    // ============================================================
-    // TOAST NOTIFICATION
-    // ============================================================
-    function showToast(message) {
-      const toast = document.createElement('div');
-      toast.style.cssText = `
-        position: fixed;
-        bottom: 100px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #333;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 10px;
-        font-size: 14px;
-        z-index: 9999;
-        max-width: 90%;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        animation: fadeIn 0.3s ease;
-      `;
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(function() {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s';
-        setTimeout(function() { toast.remove(); }, 300);
-      }, 3000);
-    }
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
-    // ============================================================
-    // BUKA APLIKASI
-    // ============================================================
-    const openBtn = document.getElementById('openAppBtn');
-    
-    openBtn.addEventListener('click', function() {
-      loadingOverlay.style.display = 'flex';
-      loadingOverlay.querySelector('p').textContent = 'Membuka aplikasi...';
-      
-      resetSessionTimer();
-      
-      window.location.href = APP_URL;
-      
-      setTimeout(function() {
-        loadingOverlay.style.display = 'none';
-        if (window.location.href.indexOf('siapjalan-pwa') !== -1) {
-          window.open(APP_URL, '_blank');
-        }
-      }, 3000);
-    });
-
-    // ============================================================
-    // INSTALL APP (PWA)
-    // ============================================================
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-    const installStatus = document.getElementById('installStatus');
-    
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      installStatus.style.display = 'inline-block';
-      installBtn.style.display = 'none';
+// ============================================================
+// GET STATUS
+// ============================================================
+function getStatusOptions() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_MASTER_STATUS);
+    if (!sheet || sheet.getLastRow() <= 1) return ['Baru', 'Proses', 'Selesai', 'Ditolak', 'Ditunda'];
+    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+    var result = [];
+    for (var i = 0; i < data.length; i++) {
+      var status = data[i][0] ? data[i][0].toString().trim() : '';
+      if (status) result.push(status);
     }
+    return result.length > 0 ? result : ['Baru', 'Proses', 'Selesai', 'Ditolak', 'Ditunda'];
+  } catch (e) {
+    return ['Baru', 'Proses', 'Selesai', 'Ditolak', 'Ditunda'];
+  }
+}
+
+// ============================================================
+// GET TIM & PIC
+// ============================================================
+function getTimPICData() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_TIM);
+    if (!sheet || sheet.getLastRow() <= 1) {
+      return [{ TIM: 'Tim Jalan Nasional', PIC: 'Budi Santoso' }, { TIM: 'Tim Jalan Provinsi', PIC: 'Siti Rahayu' }, { TIM: 'Tim Jalan Kabupaten', PIC: 'Ahmad Fauzi' }];
+    }
+    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 2).getValues();
+    var result = [];
+    for (var i = 0; i < data.length; i++) {
+      var timName = data[i][0] ? data[i][0].toString().trim() : '';
+      var picName = data[i][1] ? data[i][1].toString().trim() : '';
+      if (timName) result.push({ TIM: timName, PIC: picName || '-' });
+    }
+    return result.length > 0 ? result : [{ TIM: 'Tim Jalan Nasional', PIC: 'Budi Santoso' }];
+  } catch (error) {
+    return [{ TIM: 'Tim Jalan Nasional', PIC: 'Budi Santoso' }];
+  }
+}
+
+function getTimData() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_TIM);
+    if (!sheet || sheet.getLastRow() <= 1) return ['Tim Jalan Nasional', 'Tim Jalan Provinsi', 'Tim Jalan Kabupaten'];
+    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+    var result = [];
+    for (var i = 0; i < data.length; i++) {
+      if (data[i][0] && data[i][0].toString().trim()) result.push(data[i][0].toString().trim());
+    }
+    return result.length > 0 ? result : ['Tim Jalan Nasional', 'Tim Jalan Provinsi', 'Tim Jalan Kabupaten'];
+  } catch (e) {
+    return ['Tim Jalan Nasional', 'Tim Jalan Provinsi', 'Tim Jalan Kabupaten'];
+  }
+}
+
+// ============================================================
+// GET ALL LAPORAN - TANPA SESSION
+// ============================================================
+function getAllLaporanWeb(filter, user) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_ADUAN);
+    if (!sheet || sheet.getLastRow() <= 1) return [];
     
-    window.addEventListener('beforeinstallprompt', function(e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'flex';
-      console.log('📱 App install prompt tersedia');
-    });
+    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 14).getValues();
+    var laporan = [];
+    var isAdmin = user && user.role === 'admin';
+    var userTim = user && user.tim ? user.tim.toString().trim() : '';
     
-    function installApp() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(function(choiceResult) {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('✅ User menerima install prompt');
-            installBtn.style.display = 'none';
-            installStatus.style.display = 'inline-block';
-          } else {
-            console.log('❌ User menolak install prompt');
+    for (var i = 0; i < data.length; i++) {
+      var row = data[i];
+      if (row.length < 14) continue;
+      if (!isAdmin && userTim) {
+        var rowTim = row[COL_TIM] ? row[COL_TIM].toString().trim() : '';
+        if (rowTim !== userTim) continue;
+      }
+      
+      var laporanTanggal = null;
+      if (row[COL_TANGGAL]) {
+        try { laporanTanggal = new Date(row[COL_TANGGAL]); } catch(e) {}
+        if (isNaN(laporanTanggal.getTime())) laporanTanggal = null;
+      }
+      
+      var item = {
+        TANGGAL: laporanTanggal ? Utilities.formatDate(laporanTanggal, Session.getScriptTimeZone(), 'yyyy-MM-dd') : '-',
+        'KODE LAPORAN': row[COL_KODE_LAPORAN] ? row[COL_KODE_LAPORAN].toString() : '',
+        DESKRIPSI: row[COL_DESKRIPSI] ? row[COL_DESKRIPSI].toString() : '',
+        PEMOHON: row[COL_PEMOHON] ? row[COL_PEMOHON].toString() : '-',
+        'DETAIL LOKASI': row[COL_DETAIL_LOKASI] ? row[COL_DETAIL_LOKASI].toString() : '',
+        'ASAL MEDIA': row[COL_ASAL_MEDIA] ? row[COL_ASAL_MEDIA].toString() : '',
+        STATUS: row[COL_STATUS] ? row[COL_STATUS].toString().trim() : 'Baru',
+        NOTES: row[COL_NOTES] ? row[COL_NOTES].toString() : '',
+        GAMBAR: row[COL_GAMBAR] ? row[COL_GAMBAR].toString() : '',
+        TIM: row[COL_TIM] ? row[COL_TIM].toString() : '',
+        PIC: row[COL_PIC] ? row[COL_PIC].toString() : '',
+        JADWAL: row[COL_JADWAL] ? row[COL_JADWAL].toString() : '',
+        'TINDAK LANJUT': row[COL_TINDAK_LANJUT] ? row[COL_TINDAK_LANJUT].toString() : '',
+        KETERANGAN: row[COL_KETERANGAN] ? row[COL_KETERANGAN].toString() : '',
+        _timestamp: laporanTanggal ? laporanTanggal.getTime() : 0
+      };
+      
+      if (filter && filter.keyword && filter.keyword.trim() !== '') {
+        var kw = filter.keyword.toLowerCase();
+        var searchable = [item['KODE LAPORAN'], item.PEMOHON, item.DESKRIPSI, item['DETAIL LOKASI'], item.STATUS, item.TIM, item.PIC].join(' ').toLowerCase();
+        if (!searchable.includes(kw)) continue;
+      }
+      if (filter && filter.status && filter.status.trim() !== '' && item.STATUS !== filter.status) continue;
+      if (isAdmin && filter && filter.tim && filter.tim.trim() !== '' && item.TIM !== filter.tim) continue;
+      
+      laporan.push(item);
+    }
+    laporan.sort(function(a, b) { return b._timestamp - a._timestamp; });
+    return laporan;
+  } catch (error) {
+    return [];
+  }
+}
+
+// ============================================================
+// DASHBOARD - TANPA SESSION
+// ============================================================
+function getDashboardData(user, filter) {
+  try {
+    var aduan = getAllLaporanWeb({}, user);
+    var total = aduan.length;
+    var statusCount = {};
+    var timCount = {};
+    var belumTindakLanjut = [];
+    var now = new Date();
+    
+    var rankingMonth = (filter && filter.rankingMonth) ? filter.rankingMonth : (new Date().getMonth() + 1);
+    var rankingYear = (filter && filter.rankingYear) ? filter.rankingYear : new Date().getFullYear();
+    
+    aduan.forEach(function(item) {
+      var status = item.STATUS || 'Unknown';
+      var displayStatus = (status === 'Baru') ? 'Selesai Bersyarat' : status;
+      statusCount[displayStatus] = (statusCount[displayStatus] || 0) + 1;
+      
+      var itemDate = new Date(item.TANGGAL);
+      if (!isNaN(itemDate.getTime())) {
+        var itemMonth = itemDate.getMonth() + 1;
+        var itemYear = itemDate.getFullYear();
+        if (itemMonth === rankingMonth && itemYear === rankingYear) {
+          if (status === 'Selesai' || status === 'Baru') {
+            var team = item.TIM || 'Unassigned';
+            if (!timCount[team]) timCount[team] = { count: 0, pic: item.PIC || '' };
+            timCount[team].count++;
+            if (item.PIC && !timCount[team].pic) timCount[team].pic = item.PIC;
           }
-          deferredPrompt = null;
-        });
-      } else {
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        let msg = '📱 Cara instal SIAP JALAN:\n\n';
-        if (isMobile) {
-          msg += '1. Buka Chrome / Safari\n';
-          msg += '2. Tap menu (⋮ atau ⬆️)\n';
-          msg += '3. Pilih "Tambahkan ke Layar Utama"\n';
-          msg += '4. Tap "Tambahkan"';
-        } else {
-          msg += '1. Buka Chrome / Edge\n';
-          msg += '2. Klik ikon install (📲) di address bar\n';
-          msg += '3. Klik "Install"';
         }
-        alert(msg);
+      }
+      
+      if (item.STATUS !== 'Selesai' && item.STATUS !== 'Ditolak') {
+        var tglLapor = new Date(item.TANGGAL);
+        if (!isNaN(tglLapor.getTime())) {
+          var selisihHari = Math.floor((now - tglLapor) / (1000 * 60 * 60 * 24));
+          if (selisihHari > 0) {
+            belumTindakLanjut.push({ kode: item['KODE LAPORAN'], hari: selisihHari, deskripsi: item.DESKRIPSI, tanggal: item.TANGGAL, tim: item.TIM || '-', pic: item.PIC || '-' });
+          }
+        }
+      }
+    });
+    
+    var timRanking = Object.keys(timCount).sort(function(a, b) { return timCount[b].count - timCount[a].count; }).map(function(name) { return { name: name, count: timCount[name].count, pic: timCount[name].pic }; });
+    
+    var monthlyStats = {};
+    aduan.forEach(function(item) {
+      if (item.TANGGAL && item.TANGGAL !== '-') {
+        var month = item.TANGGAL.substring(0, 7);
+        monthlyStats[month] = (monthlyStats[month] || 0) + 1;
+      }
+    });
+    var monthlyData = Object.keys(monthlyStats).sort().map(function(m) { return { month: m, count: monthlyStats[m] }; });
+    belumTindakLanjut.sort(function(a, b) { return b.hari - a.hari; });
+    
+    return { total: total, statusCount: statusCount, timRanking: timRanking, monthlyStats: monthlyData, belumTindakLanjut: belumTindakLanjut.slice(0, 10), timList: getTimData(), rankingMonth: rankingMonth, rankingYear: rankingYear };
+  } catch (e) {
+    return { total: 0, statusCount: {}, timRanking: [], monthlyStats: [], belumTindakLanjut: [], timList: [], rankingMonth: 1, rankingYear: 2024 };
+  }
+}
+
+// ============================================================
+// USER MANAGEMENT
+// ============================================================
+function getUserData() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_USER);
+    if (!sheet || sheet.getLastRow() <= 1) return [{ user: 'admin', password: 'admin123', role: 'admin', tim: '' }, { user: 'operator1', password: 'op123', role: 'operator', tim: 'Tim Jalan Nasional' }];
+    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 4).getValues();
+    var result = [];
+    for (var i = 0; i < data.length; i++) {
+      if (data[i][0] && data[i][0].toString().trim()) {
+        result.push({ user: data[i][0].toString().trim(), password: data[i][1] ? data[i][1].toString().trim() : '', role: data[i][2] ? data[i][2].toString().trim() : 'operator', tim: data[i][3] ? data[i][3].toString().trim() : '' });
       }
     }
-    
-    installBtn.addEventListener('click', installApp);
+    return result.length > 0 ? result : [{ user: 'admin', password: 'admin123', role: 'admin', tim: '' }];
+  } catch (e) {
+    return [{ user: 'admin', password: 'admin123', role: 'admin', tim: '' }];
+  }
+}
 
-    // ============================================================
-    // REGISTER SERVICE WORKER
-    // ============================================================
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(function(reg) {
-          console.log('✅ Service Worker terdaftar!', reg);
-        })
-        .catch(function(err) {
-          console.log('❌ Gagal Service Worker:', err);
-        });
+function login(username, password) {
+  try {
+    var users = getUserData();
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].user === username && users[i].password === password) {
+        return { success: true, user: { user: users[i].user, role: users[i].role, tim: users[i].tim || '' } };
+      }
     }
+    return { success: false, message: 'Username atau password salah!' };
+  } catch (e) {
+    return { success: false, message: 'Terjadi kesalahan sistem' };
+  }
+}
 
-    // ============================================================
-    // START SESSION TIMER
-    // ============================================================
-    resetSessionTimer();
-    
-    console.log('🚀 SIAP JALAN PWA v2.5 dengan Auto-Logout siap digunakan!');
-    console.log('⏰ Session timeout: ' + (SESSION_TIMEOUT/60000) + ' menit');
-    console.log('🔗 URL Web App: ' + APP_URL);
-  </script>
+function insertUser(userData) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_USER);
+    if (!sheet) return { success: false, message: 'Sheet tidak ditemukan' };
+    var users = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+    for (var i = 0; i < users.length; i++) {
+      if (users[i][0] === userData.user) return { success: false, message: 'User sudah ada!' };
+    }
+    sheet.appendRow([userData.user, userData.password, userData.role, userData.tim || '']);
+    return { success: true, message: 'User berhasil ditambahkan!' };
+  } catch (e) {
+    return { success: false, message: 'Gagal tambah user: ' + e.message };
+  }
+}
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+function deleteUser(username) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_USER);
+    if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'Tidak ada user!' };
+    var users = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+    for (var i = 0; i < users.length; i++) {
+      if (users[i][0] === username) { sheet.deleteRow(i + 2); return { success: true, message: 'User berhasil dihapus!' }; }
+    }
+    return { success: false, message: 'User tidak ditemukan!' };
+  } catch (e) {
+    return { success: false, message: 'Gagal hapus user: ' + e.message };
+  }
+}
 
-</body>
-</html>
+// ============================================================
+// ADUAN CRUD
+// ============================================================
+function generateKodeLaporan() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_ADUAN);
+    if (!sheet || sheet.getLastRow() <= 1) return 'BM-' + new Date().getFullYear() + '-001';
+    var year = new Date().getFullYear();
+    var data = sheet.getRange(2, COL_KODE_LAPORAN + 1, sheet.getLastRow() - 1, 1).getValues();
+    var maxNum = 0;
+    for (var i = 0; i < data.length; i++) {
+      var kode = data[i][0] ? data[i][0].toString() : '';
+      if (kode && kode.startsWith('BM-' + year)) {
+        var parts = kode.split('-');
+        if (parts.length === 3) { var num = parseInt(parts[2]); if (num > maxNum) maxNum = num; }
+      }
+    }
+    return 'BM-' + year + '-' + String(maxNum + 1).padStart(3, '0');
+  } catch (e) {
+    return 'BM-' + new Date().getFullYear() + '-001';
+  }
+}
+
+function insertAduan(data, user) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_ADUAN);
+    if (!sheet) return { success: false, message: 'Sheet tidak ditemukan' };
+    if (user && user.role === 'operator') {
+      var timUser = user.tim ? user.tim.toString().trim() : '';
+      if (!timUser) return { success: false, message: 'Akun operator tidak memiliki tim! Hubungi admin.' };
+      data.tim = timUser;
+    }
+    var kodeLaporan = data.kode || data.kodeLaporan || generateKodeLaporan();
+    var statusValue = data.status || data.STATUS || 'Baru';
+    var picValue = data.pic || data.PIC || '';
+    if (!picValue && data.tim) {
+      var timPICData = getTimPICData();
+      for (var i = 0; i < timPICData.length; i++) {
+        if (timPICData[i].TIM === data.tim) { picValue = timPICData[i].PIC; break; }
+      }
+    }
+    var row = [data.tanggal || data.TANGGAL || new Date().toISOString().split('T')[0], kodeLaporan, data.deskripsi || data.DESKRIPSI || '', data.pemohon || data.PEMOHON || '-', data.lokasi || data['DETAIL LOKASI'] || '', data.media || data['ASAL MEDIA'] || '', statusValue, data.notes || data.NOTES || '', data.gambar || data.GAMBAR || '', data.tim || data.TIM || '', picValue, data.jadwal || data.JADWAL || '', data.tindakLanjut || data['TINDAK LANJUT'] || '', data.keterangan || data.KETERANGAN || ''];
+    sheet.appendRow(row);
+    return { success: true, message: 'Data berhasil disimpan!', kodeLaporan: kodeLaporan };
+  } catch (e) {
+    return { success: false, message: 'Gagal menyimpan: ' + e.message };
+  }
+}
+
+function updateLaporanWeb(data) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_ADUAN);
+    if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'Tidak ada data!' };
+    var sheetData = sheet.getRange(2, 1, sheet.getLastRow() - 1, 14).getValues();
+    for (var i = 0; i < sheetData.length; i++) {
+      if (sheetData[i][COL_KODE_LAPORAN] === data.kodeLaporan) {
+        var rowNum = i + 2;
+        if (data.JADWAL !== undefined) sheet.getRange(rowNum, COL_JADWAL + 1).setValue(data.JADWAL);
+        if (data['TINDAK LANJUT'] !== undefined) sheet.getRange(rowNum, COL_TINDAK_LANJUT + 1).setValue(data['TINDAK LANJUT']);
+        if (data.KETERANGAN !== undefined) sheet.getRange(rowNum, COL_KETERANGAN + 1).setValue(data.KETERANGAN);
+        if (data.STATUS !== undefined) sheet.getRange(rowNum, COL_STATUS + 1).setValue(data.STATUS);
+        if (data.TIM !== undefined) sheet.getRange(rowNum, COL_TIM + 1).setValue(data.TIM);
+        if (data.PIC !== undefined) sheet.getRange(rowNum, COL_PIC + 1).setValue(data.PIC);
+        return { success: true, message: 'Laporan berhasil diupdate!' };
+      }
+    }
+    return { success: false, message: 'Laporan tidak ditemukan!' };
+  } catch (error) {
+    return { success: false, message: error.toString() };
+  }
+}
+
+function deleteLaporanWeb(data) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_ADUAN);
+    if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'Tidak ada data!' };
+    var sheetData = sheet.getRange(2, 1, sheet.getLastRow() - 1, 14).getValues();
+    for (var i = 0; i < sheetData.length; i++) {
+      if (sheetData[i][COL_KODE_LAPORAN] === data.kodeLaporan) { sheet.deleteRow(i + 2); return { success: true, message: 'Laporan berhasil dihapus!' }; }
+    }
+    return { success: false, message: 'Laporan tidak ditemukan!' };
+  } catch (error) {
+    return { success: false, message: error.toString() };
+  }
+}
+
+// ============================================================
+// PEKERJAAN CRUD
+// ============================================================
+function getPekerjaanData(filter, user) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet || sheet.getLastRow() <= 1) return [];
+    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 26).getValues();
+    var hasil = [];
+    for (var i = 0; i < data.length; i++) {
+      var row = data[i];
+      var jenisPekerjaan = row[COL_JENIS_PEKERJAAN] ? row[COL_JENIS_PEKERJAAN].toString().trim() : '';
+      if (filter && filter.jenis && filter.jenis !== '' && jenisPekerjaan !== filter.jenis) continue;
+      var tahun = row[COL_TAHUN] ? row[COL_TAHUN].toString().trim() : '';
+      if (filter && filter.tahun && filter.tahun !== '' && tahun !== filter.tahun) continue;
+      if (filter && filter.keyword && filter.keyword.trim() !== '') {
+        var kw = filter.keyword.toLowerCase();
+        var searchable = [row[COL_NAMA_PEKERJAAN] || '', row[COL_PPK] || '', row[COL_PPTK] || '', row[COL_NOMOR_KONTRAK] || '', jenisPekerjaan, row[COL_KODE_RUP] || '', row[COL_PENYEDIA] || ''].join(' ').toLowerCase();
+        if (!searchable.includes(kw)) continue;
+      }
+      var item = { 'NAMA PEKERJAAN': row[COL_NAMA_PEKERJAAN] || '', 'PAGU': row[COL_PAGU] || '', 'PPK': row[COL_PPK] || '', 'PPTK': row[COL_PPTK] || '', 'PENGAWAS': row[COL_PENGAWAS] || '', 'ADMIN': row[COL_ADMIN] || '', 'PERENCANA': row[COL_PERENCANA] || '', 'PEJABAT PENGADAAN': row[COL_PEJABAT_PENGADAAN] || '', 'TANGGAL AWAL': row[COL_TANGGAL_AWAL] || '', 'TANGGAL AKHIR': row[COL_TANGGAL_AKHIR] || '', 'NOMOR KONTRAK': row[COL_NOMOR_KONTRAK] || '', 'JENIS PEKERJAAN': jenisPekerjaan, 'TAHUN': tahun, 'KETERANGAN': row[COL_KETERANGAN_PEKERJAAN] || '', 'KODE RUP': row.length > COL_KODE_RUP ? row[COL_KODE_RUP] || '' : '', 'HPS': row.length > COL_HPS ? row[COL_HPS] || '' : '', 'PENYEDIA': row.length > COL_PENYEDIA ? row[COL_PENYEDIA] || '' : '', 'HARGA TERKONTRAK': row.length > COL_HARGA_TERKONTRAK ? row[COL_HARGA_TERKONTRAK] || '' : '', 'TANGGAL SPPBJ': row.length > COL_TANGGAL_SPPBJ ? row[COL_TANGGAL_SPPBJ] || '' : '', 'NOMOR SPPBJ': row.length > COL_NOMOR_SPPBJ ? row[COL_NOMOR_SPPBJ] || '' : '', 'TANGGAL SPK': row.length > COL_TANGGAL_SPK ? row[COL_TANGGAL_SPK] || '' : '', 'NOMOR SPK': row.length > COL_NOMOR_SPK ? row[COL_NOMOR_SPK] || '' : '', 'TANGGAL SPMK': row.length > COL_TANGGAL_SPMK ? row[COL_TANGGAL_SPMK] || '' : '', 'NOMOR SPMK': row.length > COL_NOMOR_SPMK ? row[COL_NOMOR_SPMK] || '' : '', 'BAP': row.length > COL_BAP ? row[COL_BAP] || '' : '', 'BAST': row.length > COL_BAST ? row[COL_BAST] || '' : '' };
+      hasil.push(item);
+    }
+    return hasil;
+  } catch (error) {
+    return [];
+  }
+}
+
+function insertPekerjaan(data, user) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet) return { success: false, message: 'Sheet tidak ditemukan' };
+    var row = [data.namaPekerjaan || '', data.pagu || '', data.ppk || '', data.pptk || '', data.pengawas || '', data.admin || '', data.perencana || '', data.pejabatPengadaan || '', data.tanggalAwal || '', data.tanggalAkhir || '', data.nomorKontrak || '', data.jenisPekerjaan || '', data.tahun || '', data.keteranganPekerjaan || '', data.kodeRup || '', data.hps || '', data.penyedia || '', data.hargaTerkontrak || '', data.tanggalSppbj || '', data.nomorSppbj || '', data.tanggalSpk || '', data.nomorSpk || '', data.tanggalSpmk || '', data.nomorSpmk || '', data.bap || '', data.bast || ''];
+    sheet.appendRow(row);
+    return { success: true, message: 'Data pekerjaan berhasil disimpan!' };
+  } catch (e) {
+    return { success: false, message: 'Gagal menyimpan: ' + e.message };
+  }
+}
+
+function updatePekerjaan(data) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'Tidak ada data!' };
+    var sheetData = sheet.getRange(2, 1, sheet.getLastRow() - 1, 26).getValues();
+    for (var i = 0; i < sheetData.length; i++) {
+      if (sheetData[i][COL_NAMA_PEKERJAAN] === data.originalNama) {
+        var rowNum = i + 2;
+        if (data.namaPekerjaan !== undefined) sheet.getRange(rowNum, COL_NAMA_PEKERJAAN + 1).setValue(data.namaPekerjaan);
+        if (data.pagu !== undefined) sheet.getRange(rowNum, COL_PAGU + 1).setValue(data.pagu);
+        if (data.ppk !== undefined) sheet.getRange(rowNum, COL_PPK + 1).setValue(data.ppk);
+        if (data.pptk !== undefined) sheet.getRange(rowNum, COL_PPTK + 1).setValue(data.pptk);
+        if (data.jenisPekerjaan !== undefined) sheet.getRange(rowNum, COL_JENIS_PEKERJAAN + 1).setValue(data.jenisPekerjaan);
+        if (data.tahun !== undefined) sheet.getRange(rowNum, COL_TAHUN + 1).setValue(data.tahun);
+        if (data.keteranganPekerjaan !== undefined) sheet.getRange(rowNum, COL_KETERANGAN_PEKERJAAN + 1).setValue(data.keteranganPekerjaan);
+        if (data.tanggalAwal !== undefined) sheet.getRange(rowNum, COL_TANGGAL_AWAL + 1).setValue(data.tanggalAwal);
+        if (data.tanggalAkhir !== undefined) sheet.getRange(rowNum, COL_TANGGAL_AKHIR + 1).setValue(data.tanggalAkhir);
+        if (data.nomorKontrak !== undefined) sheet.getRange(rowNum, COL_NOMOR_KONTRAK + 1).setValue(data.nomorKontrak);
+        if (data.kodeRup !== undefined) sheet.getRange(rowNum, COL_KODE_RUP + 1).setValue(data.kodeRup);
+        if (data.hps !== undefined) sheet.getRange(rowNum, COL_HPS + 1).setValue(data.hps);
+        if (data.penyedia !== undefined) sheet.getRange(rowNum, COL_PENYEDIA + 1).setValue(data.penyedia);
+        if (data.hargaTerkontrak !== undefined) sheet.getRange(rowNum, COL_HARGA_TERKONTRAK + 1).setValue(data.hargaTerkontrak);
+        return { success: true, message: 'Data pekerjaan berhasil diupdate!' };
+      }
+    }
+    return { success: false, message: 'Data tidak ditemukan!' };
+  } catch (error) {
+    return { success: false, message: error.toString() };
+  }
+}
+
+function deletePekerjaan(data) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'Tidak ada data!' };
+    var sheetData = sheet.getRange(2, 1, sheet.getLastRow() - 1, 26).getValues();
+    for (var i = 0; i < sheetData.length; i++) {
+      if (sheetData[i][COL_NAMA_PEKERJAAN] === data.namaPekerjaan) { sheet.deleteRow(i + 2); return { success: true, message: 'Data pekerjaan berhasil dihapus!' }; }
+    }
+    return { success: false, message: 'Data tidak ditemukan!' };
+  } catch (error) {
+    return { success: false, message: error.toString() };
+  }
+}
+
+function getTahunRekap() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet || sheet.getLastRow() <= 1) return [];
+    var data = sheet.getRange(2, COL_TAHUN + 1, sheet.getLastRow() - 1, 1).getValues();
+    var tahunSet = new Set();
+    for (var i = 0; i < data.length; i++) {
+      var tahun = data[i][0] ? data[i][0].toString().trim() : '';
+      if (tahun) tahunSet.add(tahun);
+    }
+    return Array.from(tahunSet).sort();
+  } catch (e) {
+    return [];
+  }
+}
+
+function getNamaPekerjaanList() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet || sheet.getLastRow() <= 1) return [];
+    var data = sheet.getRange(2, COL_NAMA_PEKERJAAN + 1, sheet.getLastRow() - 1, 1).getValues();
+    var result = [];
+    for (var i = 0; i < data.length; i++) {
+      var nama = data[i][0] ? data[i][0].toString().trim() : '';
+      if (nama) result.push(nama);
+    }
+    return result;
+  } catch (e) {
+    return [];
+  }
+}
+
+// ============================================================
+// EXPORT KE GOOGLE DRIVE
+// ============================================================
+function exportAduanToExcel() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_ADUAN);
+    if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'Tidak ada data untuk diexport' };
+    var folderName = 'EXPORT SIAP JALAN';
+    var folders = DriveApp.getFoldersByName(folderName);
+    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+    var timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd_HH-mm');
+    var fileName = 'Laporan_Aduan_' + timestamp;
+    var newFile = SpreadsheetApp.create(fileName);
+    var newSheet = newFile.getActiveSheet();
+    var data = sheet.getDataRange().getValues();
+    newSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+    newSheet.getRange(1, 1, 1, data[0].length).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+    newSheet.setFrozenRows(1);
+    newSheet.autoResizeColumns(1, data[0].length);
+    var fileId = newFile.getId();
+    var file = DriveApp.getFileById(fileId);
+    folder.addFile(file);
+    DriveApp.getRootFolder().removeFile(file);
+    return { success: true, message: '✅ Ekspor berhasil! File disimpan di folder "EXPORT SIAP JALAN"', fileName: fileName, fileUrl: file.getUrl(), dataCount: data.length - 1 };
+  } catch (e) {
+    return { success: false, message: 'Gagal ekspor: ' + e.message };
+  }
+}
+
+function exportPekerjaanToExcel() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_PEKERJAAN);
+    if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'Tidak ada data untuk diexport' };
+    var folderName = 'EXPORT SIAP JALAN';
+    var folders = DriveApp.getFoldersByName(folderName);
+    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+    var timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd_HH-mm');
+    var fileName = 'Rekap_Pekerjaan_' + timestamp;
+    var newFile = SpreadsheetApp.create(fileName);
+    var newSheet = newFile.getActiveSheet();
+    var data = sheet.getDataRange().getValues();
+    newSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+    newSheet.getRange(1, 1, 1, data[0].length).setFontWeight('bold').setBackground('#0b2b4f').setFontColor('white');
+    newSheet.setFrozenRows(1);
+    newSheet.autoResizeColumns(1, data[0].length);
+    var fileId = newFile.getId();
+    var file = DriveApp.getFileById(fileId);
+    folder.addFile(file);
+    DriveApp.getRootFolder().removeFile(file);
+    return { success: true, message: '✅ Ekspor berhasil! File disimpan di folder "EXPORT SIAP JALAN"', fileName: fileName, fileUrl: file.getUrl(), dataCount: data.length - 1 };
+  } catch (e) {
+    return { success: false, message: 'Gagal ekspor: ' + e.message };
+  }
+}
+
+// ============================================================
+// GET TANGGAL TERLAMA
+// ============================================================
+function getTanggalTerlama(user) {
+  try {
+    var aduan = getAllLaporanWeb({}, user);
+    if (aduan.length === 0) return null;
+    var tanggalTerlama = null;
+    for (var i = 0; i < aduan.length; i++) {
+      if (aduan[i].TANGGAL && aduan[i].TANGGAL !== '-') {
+        var tgl = new Date(aduan[i].TANGGAL);
+        if (!isNaN(tgl.getTime())) {
+          if (!tanggalTerlama || tgl < tanggalTerlama) tanggalTerlama = tgl;
+        }
+      }
+    }
+    return tanggalTerlama ? Utilities.formatDate(tanggalTerlama, Session.getScriptTimeZone(), 'yyyy-MM-dd') : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ============================================================
+// LOGOUT
+// ============================================================
+function doLogout() {
+  try {
+    var url = ScriptApp.getService().getUrl();
+    return HtmlService.createHtmlOutput(
+      '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+      '<meta http-equiv="refresh" content="2;url=' + url + '">' +
+      '<style>body{font-family:sans-serif;text-align:center;padding:50px;background:#0D2F5F;color:white;}</style>' +
+      '</head><body><h1>🔐 Logout Berhasil</h1><p>Mengalihkan ke halaman login...</p></body></html>'
+    );
+  } catch (e) {
+    var url = ScriptApp.getService().getUrl();
+    return HtmlService.createHtmlOutput('<html><body onload="window.location.href=\'' + url + '\'"><p>Logout berhasil.</p></body></html>');
+  }
+}
