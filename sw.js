@@ -1,8 +1,8 @@
 // ============================================================
-// SIAP JALAN - Service Worker v2.3
+// SIAP JALAN - Service Worker v2.5
 // ============================================================
 
-const CACHE_NAME = 'siapjalan-v2.3.0';
+const CACHE_NAME = 'siapjalan-v2.5.0';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -18,7 +18,7 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
-        console.log('📦 Cache SIAP JALAN v2.3');
+        console.log('📦 Cache SIAP JALAN v2.5');
         return cache.addAll(urlsToCache);
       })
       .catch(function(error) {
@@ -55,16 +55,26 @@ self.addEventListener('fetch', function(event) {
   const request = event.request;
   const url = new URL(request.url);
   
-  // Google Apps Script - biarkan online
+  // Google Apps Script - pass through
   if (url.hostname === 'script.google.com') {
-    event.respondWith(fetch(request));
+    event.respondWith(
+      fetch(request).catch(function() {
+        return new Response(
+          '<html><body style="text-align:center;padding:50px;font-family:sans-serif;background:#0D2F5F;color:white;"><h1>📴 Offline</h1><p>Periksa koneksi internet.</p></body></html>',
+          { headers: { 'Content-Type': 'text/html' } }
+        );
+      })
+    );
     return;
   }
   
   // Cache first untuk asset statis
   event.respondWith(
     caches.match(request).then(function(cached) {
-      return cached || fetch(request).then(function(response) {
+      if (cached) {
+        return cached;
+      }
+      return fetch(request).then(function(response) {
         if (request.method === 'GET' && response.status === 200) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(function(cache) {
@@ -82,4 +92,4 @@ self.addEventListener('fetch', function(event) {
   );
 });
 
-console.log('🔔 Service Worker SIAP JALAN v2.3 aktif!');
+console.log('🔔 Service Worker SIAP JALAN v2.5 aktif!');
