@@ -1,52 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SIAP JALAN - Sistem Integrasi Aduan dan Penanganan Jalan</title>
+  <title>SIAP JALAN</title>
   
-  <!-- PWA Meta Tags -->
+  <!-- PWA Meta -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0D2F5F">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SIAP JALAN">
+  
+  <!-- Favicon / Icons -->
+  <link rel="icon" type="image/png" href="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png">
   <link rel="apple-touch-icon" href="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png">
   
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
   <style>
-    /* ============================================================
-       ALL CSS
-    ============================================================ */
-    :root {
-      --navy: #0D2F5F;
-      --navy-light: #1a4a7a;
-      --navy-dark: #061a30;
-      --gold: #F5B400;
-      --gold-light: #ffc933;
-      --gold-dark: #d49a00;
-      --white: #ffffff;
-      --gray-50: #f8f9fa;
-      --gray-100: #f0f2f5;
-      --gray-200: #e0e0e0;
-      --gray-300: #c0c0c0;
-      --gray-600: #6c757d;
-      --gray-800: #333333;
-      --success: #28a745;
-      --danger: #dc3545;
-      --warning: #ffc107;
-      --info: #17a2b8;
-      --shadow: 0 2px 12px rgba(13,47,95,0.15);
-      --shadow-hover: 0 4px 20px rgba(13,47,95,0.25);
-      --radius: 12px;
-      --transition: all 0.3s ease;
-    }
-    
     * {
       margin: 0;
       padding: 0;
@@ -54,288 +24,108 @@
     }
     
     body {
-      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: var(--gray-800);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #0D2F5F;
       min-height: 100vh;
-      background: var(--gray-50);
-      overflow: hidden;
-    }
-    
-    /* ============================================================
-       SPLASH SCREEN ANIMATION
-    ============================================================ */
-    #splashScreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0D2F5F 0%, #0a2345 50%, #061a30 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
-      animation: splashFadeOut 3.5s ease-in-out forwards;
-      animation-delay: 2.5s;
+      padding: 20px;
     }
     
-    @keyframes splashFadeOut {
-      0%, 70% { opacity: 1; }
-      100% { opacity: 0; visibility: hidden; }
-    }
-    
-    .splash-content {
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
       text-align: center;
-      animation: splashPulse 2s ease-in-out infinite;
+      padding: 40px 30px 30px;
     }
     
-    @keyframes splashPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    
-    .splash-logo {
-      width: 120px;
-      height: 120px;
+    .logo {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      background: var(--white);
-      padding: 12px;
+      border: 4px solid #F5B400;
+      padding: 8px;
+      background: white;
       margin: 0 auto 20px;
-      box-shadow: 0 0 60px rgba(245, 180, 0, 0.3);
-      animation: logoGlow 2s ease-in-out infinite;
     }
     
-    @keyframes logoGlow {
-      0%, 100% { box-shadow: 0 0 60px rgba(245, 180, 0, 0.3); }
-      50% { box-shadow: 0 0 100px rgba(245, 180, 0, 0.6); }
-    }
-    
-    .splash-logo img {
+    .logo img {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
+      object-fit: contain;
     }
     
-    .splash-title {
-      color: var(--white);
-      font-size: 38px;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
-    
-    .splash-title .siap {
-      color: var(--gold);
-    }
-    
-    .splash-title .jalan {
-      color: var(--white);
-    }
-    
-    .splash-subtitle {
-      color: rgba(255,255,255,0.7);
-      font-size: 13px;
-      font-weight: 300;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      margin-top: 6px;
-    }
-    
-    .splash-loader {
-      margin-top: 25px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    
-    .splash-loader .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--gold);
-      animation: dotBounce 1.4s ease-in-out infinite both;
-    }
-    
-    .splash-loader .dot:nth-child(1) { animation-delay: -0.32s; }
-    .splash-loader .dot:nth-child(2) { animation-delay: -0.16s; }
-    .splash-loader .dot:nth-child(3) { animation-delay: 0s; }
-    
-    @keyframes dotBounce {
-      0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
-      40% { transform: scale(1); opacity: 1; }
-    }
-    
-    .splash-version {
-      position: absolute;
-      bottom: 25px;
-      color: rgba(255,255,255,0.3);
-      font-size: 11px;
-      letter-spacing: 2px;
-    }
-    
-    /* ============================================================
-       HIDE SPLASH
-    ============================================================ */
-    #splashScreen.hidden {
-      display: none;
-    }
-    
-    /* ============================================================
-       MAIN APP - FULLSCREEN IFRAME
-    ============================================================ */
-    #mainApp {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    #mainApp.visible {
-      display: block;
-      opacity: 1;
-    }
-    
-    /* ============================================================
-       IFRAME - FULLSCREEN
-    ============================================================ */
-    #appIframe {
-      width: 100%;
-      height: 100vh;
-      border: none;
-      background: var(--gray-50);
-      display: block;
-    }
-    
-    /* ============================================================
-       TOMBOL INSTALL DI BAWAH LOGIN
-    ============================================================ */
-    #installOverlay {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 999;
-      display: none;
-      animation: slideUp 0.5s ease;
-    }
-    
-    #installOverlay.show {
-      display: block;
-    }
-    
-    @keyframes slideUp {
-      from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-      to { transform: translateX(-50%) translateY(0); opacity: 1; }
-    }
-    
-    .btn-install-bottom {
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-      color: var(--navy);
-      border: none;
-      padding: 14px 32px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 16px;
+    h1 {
+      font-size: 28px;
       font-weight: 700;
-      transition: var(--transition);
-      display: flex;
+      color: #0D2F5F;
+      margin-bottom: 5px;
+    }
+    
+    h1 .siap { color: #0D2F5F; }
+    h1 .jalan { color: #F5B400; }
+    
+    .subtitle {
+      color: #6c757d;
+      font-size: 13px;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+    
+    .btn {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 4px 20px rgba(245, 180, 0, 0.4);
-      font-family: 'Inter', sans-serif;
+      gap: 10px;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #0D2F5F, #1a4a7a);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      width: 100%;
+      justify-content: center;
     }
     
-    .btn-install-bottom:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 30px rgba(245, 180, 0, 0.6);
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(13,47,95,0.4);
     }
     
-    .btn-install-bottom:active {
-      transform: scale(0.95);
+    .btn i {
+      font-size: 18px;
     }
     
-    .btn-install-bottom i {
-      font-size: 22px;
+    .info {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #999;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
     }
     
-    .btn-install-bottom .install-badge {
-      background: rgba(13, 47, 95, 0.15);
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 11px;
+    .info a {
+      color: #0D2F5F;
+      text-decoration: none;
       font-weight: 600;
     }
     
-    /* ============================================================
-       IOS INSTALL PROMPT
-    ============================================================ */
-    .ios-install-prompt {
-      display: none;
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--navy);
-      color: white;
-      padding: 15px 25px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-hover);
-      z-index: 1000;
-      max-width: 90%;
-      text-align: center;
-      font-size: 14px;
-      animation: slideUp 0.5s ease;
-    }
-    
-    .ios-install-prompt .close-prompt {
-      position: absolute;
-      top: 5px;
-      right: 12px;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.5);
-      font-size: 20px;
-      cursor: pointer;
-    }
-    
-    .ios-install-prompt .share-icon {
-      font-size: 30px;
-      display: block;
-      margin: 5px 0;
-    }
-    
-    /* ============================================================
-       LOADING OVERLAY
-    ============================================================ */
-    #loadingOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.95);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    #loadingOverlay.active {
-      display: flex;
-    }
-    
-    #loadingOverlay .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid var(--gray-200);
-      border-top: 4px solid var(--gold);
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid white;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.8s linear infinite;
     }
     
     @keyframes spin {
@@ -343,671 +133,128 @@
       100% { transform: rotate(360deg); }
     }
     
-    #loadingOverlay p {
-      color: var(--gray-600);
-      font-weight: 500;
-    }
-    
-    /* ============================================================
-       TIMER FLOATING DI ATAS IFRAME
-    ============================================================ */
-    #timerFloating {
-      position: fixed;
-      top: 15px;
-      right: 20px;
-      z-index: 100;
-      background: rgba(13, 47, 95, 0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      color: white;
-      padding: 8px 18px;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 600;
+    .loading-text {
       display: none;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.1);
-      font-family: 'Inter', sans-serif;
-      pointer-events: none;
-      user-select: none;
+      color: #0D2F5F;
+      font-size: 14px;
+      margin-top: 15px;
     }
     
-    #timerFloating.show {
-      display: flex;
+    .btn.loading .btn-text {
+      display: none;
     }
     
-    #timerFloating .timer-icon {
-      color: var(--gold);
-      font-size: 16px;
+    .btn.loading .loading-text {
+      display: inline;
     }
     
-    #timerFloating .timer-text {
-      font-variant-numeric: tabular-nums;
-      letter-spacing: 0.5px;
-    }
-    
-    #timerFloating .timer-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #4ade80;
-      margin-left: 4px;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    
-    #timerFloating .timer-dot.warning {
-      background: var(--gold);
-    }
-    
-    #timerFloating .timer-dot.danger {
-      background: var(--danger);
-      animation: pulse-dot 0.5s ease-in-out infinite;
-    }
-    
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.7); }
-    }
-    
-    #timerFloating.warning-mode {
-      border-color: var(--gold);
-      box-shadow: 0 4px 20px rgba(245, 180, 0, 0.3);
-    }
-    
-    #timerFloating.danger-mode {
-      border-color: var(--danger);
-      box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
-      animation: pulse-border 1s ease-in-out infinite;
-    }
-    
-    @keyframes pulse-border {
-      0%, 100% { border-color: var(--danger); }
-      50% { border-color: rgba(220, 53, 69, 0.3); }
-    }
-    
-    /* ============================================================
-       RESPONSIVE - LOGO LEBIH KECIL DI HP
-    ============================================================ */
-    @media (max-width: 768px) {
-      .splash-logo {
-        width: 90px;
-        height: 90px;
-        padding: 10px;
-        margin-bottom: 15px;
-      }
-      
-      .splash-title {
-        font-size: 28px;
-      }
-      
-      .splash-subtitle {
-        font-size: 11px;
-        letter-spacing: 3px;
-      }
-      
-      .splash-loader {
-        margin-top: 20px;
-        gap: 8px;
-      }
-      
-      .splash-loader .dot {
-        width: 10px;
-        height: 10px;
-      }
-      
-      .splash-version {
-        font-size: 10px;
-        bottom: 20px;
-      }
-      
-      #timerFloating {
-        top: 10px;
-        right: 10px;
-        padding: 5px 14px;
-        font-size: 12px;
-        gap: 6px;
-      }
-      #timerFloating .timer-icon { font-size: 13px; }
-      #timerFloating .timer-dot { width: 6px; height: 6px; }
-      
-      #installOverlay { bottom: 15px; width: 92%; }
-      .btn-install-bottom { 
-        width: 100%; 
-        justify-content: center; 
-        padding: 12px 24px; 
-        font-size: 14px; 
-      }
-      .btn-install-bottom i { font-size: 18px; }
-    }
-    
-    @media (max-width: 480px) {
-      .splash-logo {
-        width: 70px;
-        height: 70px;
-        padding: 8px;
-        margin-bottom: 12px;
-        box-shadow: 0 0 40px rgba(245, 180, 0, 0.25);
-      }
-      
-      @keyframes logoGlow {
-        0%, 100% { box-shadow: 0 0 40px rgba(245, 180, 0, 0.25); }
-        50% { box-shadow: 0 0 70px rgba(245, 180, 0, 0.5); }
-      }
-      
-      .splash-title {
-        font-size: 22px;
-        letter-spacing: 1px;
-      }
-      
-      .splash-subtitle {
-        font-size: 10px;
-        letter-spacing: 2px;
-        margin-top: 4px;
-      }
-      
-      .splash-loader {
-        margin-top: 15px;
-        gap: 6px;
-      }
-      
-      .splash-loader .dot {
-        width: 8px;
-        height: 8px;
-      }
-      
-      .splash-version {
-        font-size: 9px;
-        bottom: 15px;
-      }
-      
-      #timerFloating {
-        top: 8px;
-        right: 8px;
-        padding: 4px 10px;
-        font-size: 10px;
-        gap: 4px;
-        border-radius: 15px;
-      }
-      #timerFloating .timer-icon { font-size: 11px; }
-      #timerFloating .timer-dot { width: 5px; height: 5px; }
-      
-      .btn-install-bottom { 
-        padding: 10px 18px; 
-        font-size: 13px;
-        gap: 8px;
-      }
-      .btn-install-bottom .install-badge { display: none; }
-    }
-    
-    /* Untuk layar sangat kecil (HP tua) */
-    @media (max-width: 360px) {
-      .splash-logo {
-        width: 60px;
-        height: 60px;
-        padding: 6px;
-        margin-bottom: 10px;
-      }
-      
-      .splash-title {
-        font-size: 18px;
-      }
-      
-      .splash-subtitle {
-        font-size: 8px;
-        letter-spacing: 1px;
-      }
-      
-      .splash-loader .dot {
-        width: 6px;
-        height: 6px;
-      }
+    .version {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
-  
-  <!-- ============================================================
-       SPLASH SCREEN
-  ============================================================ -->
-  <div id="splashScreen">
-    <div class="splash-content">
-      <div class="splash-logo">
-        <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="SIAP JALAN">
-      </div>
-      <h1 class="splash-title">
-        <span class="siap">SIAP</span> 
-        <span class="jalan">JALAN</span>
-      </h1>
-      <p class="splash-subtitle">Backup &amp; Monitoring System</p>
-      <div class="splash-loader">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-      <div class="splash-version">v2.0 • BINAMARGA</div>
-    </div>
+
+<div class="container">
+  <div class="logo">
+    <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="Logo SIAP JALAN">
   </div>
   
-  <!-- ============================================================
-       LOADING OVERLAY
-  ============================================================ -->
-  <div id="loadingOverlay">
-    <div class="spinner"></div>
-    <p>Memuat aplikasi...</p>
+  <h1>
+    <span class="siap">SIAP</span>
+    <span class="jalan">JALAN</span>
+  </h1>
+  <p class="subtitle">Sistem Integrasi Aduan &amp; Penanganan Jalan</p>
+  
+  <a href="https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec" 
+     class="btn" 
+     id="openAppBtn"
+     target="_blank">
+    <i class="fas fa-rocket"></i>
+    <span class="btn-text">Buka Aplikasi</span>
+    <span class="loading-text"><span class="spinner"></span> Membuka...</span>
+  </a>
+  
+  <div class="info">
+    <i class="fas fa-shield-alt" style="color:#F5B400;margin-right:5px;"></i>
+    Pastikan Anda terhubung ke internet
   </div>
   
-  <!-- ============================================================
-       TIMER FLOATING DI ATAS IFRAME
-  ============================================================ -->
-  <div id="timerFloating">
-    <span class="timer-icon"><i class="fas fa-clock"></i></span>
-    <span class="timer-text" id="timerTextDisplay">30:00</span>
-    <span class="timer-dot" id="timerDot"></span>
+  <div class="version">
+    v2.0.0 &bull; <a href="#" onclick="installApp()">Instal Aplikasi</a>
   </div>
+</div>
+
+<script>
+  // ============================================================
+  // INSTALL APP (PWA)
+  // ============================================================
+  let deferredPrompt;
   
-  <!-- ============================================================
-       TOMBOL INSTALL DI BAWAH LOGIN
-  ============================================================ -->
-  <div id="installOverlay">
-    <button class="btn-install-bottom" onclick="installApp()">
-      <i class="fas fa-download"></i>
-      <span>Instal SiapJalan</span>
-      <span class="install-badge"><i class="fas fa-mobile-alt"></i> PWA</span>
-    </button>
-  </div>
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log('📱 App install prompt tersedia');
+  });
   
-  <!-- ============================================================
-       IOS INSTALL PROMPT
-  ============================================================ -->
-  <div class="ios-install-prompt" id="iosPrompt">
-    <button class="close-prompt" onclick="document.getElementById('iosPrompt').style.display='none'">&times;</button>
-    <span class="share-icon">📱</span>
-    <p><strong>Instal SIAP JALAN</strong><br>
-    Tap <i class="fas fa-square-arrow-up" style="color:var(--gold);"></i> Share lalu pilih <strong>"Add to Home Screen"</strong></p>
-  </div>
-  
-  <!-- ============================================================
-       MAIN APP - FULLSCREEN IFRAME
-  ============================================================ -->
-  <div id="mainApp">
-    <iframe id="appIframe" 
-            src="https://script.google.com/macros/s/AKfycbzPkLzkT3og-uprtd3m0HG868zzQ3oHpZxBMwTwoYGSK0rAesECkE8i4lGMGSqY1jLp-Q/exec"
-            allow="geolocation; microphone; camera; midi; encrypted-media"
-            allowfullscreen>
-    </iframe>
-  </div>
-  
-  <!-- ============================================================
-       JAVASCRIPT
-  ============================================================ -->
-  <script>
-    // ============================================================
-    // AUTO LOGOUT - 30 MINUTES INACTIVITY
-    // ============================================================
-    const SESSION_TIMEOUT = 30 * 60 * 1000;
-    let sessionTimer = null;
-    let timeLeft = SESSION_TIMEOUT;
-    let timerInterval = null;
-    let isWarningShown = false;
-    let isLoggedIn = false;
-    let timerVisible = false;
-    
-    // ============================================================
-    // TIMER UI
-    // ============================================================
-    function showTimer() {
-      const timerEl = document.getElementById('timerFloating');
-      timerEl.classList.add('show');
-      timerVisible = true;
-      updateTimerDisplay();
-    }
-    
-    function hideTimer() {
-      const timerEl = document.getElementById('timerFloating');
-      timerEl.classList.remove('show');
-      timerVisible = false;
-    }
-    
-    function updateTimerDisplay() {
-      const minutes = Math.floor(timeLeft / 60000);
-      const seconds = Math.floor((timeLeft % 60000) / 1000);
-      const timerText = document.getElementById('timerTextDisplay');
-      timerText.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-      
-      const timerEl = document.getElementById('timerFloating');
-      const timerDot = document.getElementById('timerDot');
-      
-      timerEl.classList.remove('warning-mode', 'danger-mode');
-      timerDot.classList.remove('warning', 'danger');
-      
-      if (timeLeft < 60 * 1000) {
-        timerEl.classList.add('danger-mode');
-        timerDot.classList.add('danger');
-        if (!isWarningShown) {
-          isWarningShown = true;
-          showToast('⚠️ Sesi akan berakhir dalam 1 menit! Segera lakukan aktivitas.', 'error');
-        }
-      } else if (timeLeft < 5 * 60 * 1000) {
-        timerEl.classList.add('warning-mode');
-        timerDot.classList.add('warning');
-        if (!isWarningShown) {
-          isWarningShown = true;
-          showToast('⚠️ Sesi akan berakhir dalam 5 menit! Lakukan aktivitas untuk tetap login.', 'warning');
-        }
-      }
-      
-      sendTimerToIframe(timeLeft);
-    }
-    
-    function sendTimerToIframe(timeLeft) {
-      const iframe = document.getElementById('appIframe');
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.postMessage({
-            type: 'TIMER_UPDATE',
-            timeLeft: timeLeft,
-            formatted: formatTime(timeLeft)
-          }, '*');
-        } catch(e) {
-          // Silent fail
-        }
-      }
-    }
-    
-    function formatTime(ms) {
-      const minutes = Math.floor(ms / 60000);
-      const seconds = Math.floor((ms % 60000) / 1000);
-      return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-    }
-    
-    function resetSessionTimer() {
-      timeLeft = SESSION_TIMEOUT;
-      isWarningShown = false;
-      updateTimerDisplay();
-      clearTimeout(sessionTimer);
-      sessionTimer = setTimeout(handleSessionTimeout, SESSION_TIMEOUT);
-    }
-    
-    function handleSessionTimeout() {
-      showToast('⏰ Sesi berakhir karena tidak ada aktivitas selama 30 menit. Silakan login kembali.', 'error');
-      hideTimer();
-      const iframe = document.getElementById('appIframe');
-      iframe.src = iframe.src;
-      isLoggedIn = false;
-      setTimeout(function() {
-        document.getElementById('installOverlay').classList.add('show');
-      }, 1000);
-    }
-    
-    function resetInactivityTimer() {
-      if (isLoggedIn) {
-        resetSessionTimer();
-      }
-    }
-    
-    var events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart', 'touchmove', 'pointerdown', 'pointermove'];
-    events.forEach(function(event) {
-      document.addEventListener(event, resetInactivityTimer, true);
-    });
-    
-    function startTimerInterval() {
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(function() {
-        timeLeft -= 1000;
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          handleSessionTimeout();
+  function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(choiceResult) {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('✅ User menerima install prompt');
         } else {
-          updateTimerDisplay();
+          console.log('❌ User menolak install prompt');
         }
-      }, 1000);
-    }
-    
-    // ============================================================
-    // IFRAME LOADING HANDLER
-    // ============================================================
-    function handleIframeLoad() {
-      var overlay = document.getElementById('loadingOverlay');
-      overlay.classList.remove('active');
-      
-      try {
-        var iframe = document.getElementById('appIframe');
-        var iframeUrl = iframe.contentWindow.location.href;
-        
-        if (iframeUrl.indexOf('login') !== -1 || iframeUrl.indexOf('Login') !== -1) {
-          isLoggedIn = false;
-          document.getElementById('installOverlay').classList.add('show');
-          hideTimer();
-          if (timerInterval) clearInterval(timerInterval);
-          if (sessionTimer) clearTimeout(sessionTimer);
-        } else if (iframeUrl.indexOf('exec') !== -1 && iframeUrl.indexOf('login') === -1) {
-          isLoggedIn = true;
-          document.getElementById('installOverlay').classList.remove('show');
-          showTimer();
-          resetSessionTimer();
-          startTimerInterval();
-        }
-      } catch(e) {
-        isLoggedIn = true;
-        document.getElementById('installOverlay').classList.remove('show');
-        showTimer();
-        resetSessionTimer();
-        startTimerInterval();
-      }
-    }
-    
-    // ============================================================
-    // DETECT LOGIN STATE
-    // ============================================================
-    var loginCheckInterval = null;
-    
-    function checkLoginState() {
-      try {
-        var iframe = document.getElementById('appIframe');
-        var iframeUrl = iframe.contentWindow.location.href;
-        
-        if (iframeUrl.indexOf('login') !== -1 || iframeUrl.indexOf('Login') !== -1) {
-          document.getElementById('installOverlay').classList.add('show');
-          if (isLoggedIn) {
-            isLoggedIn = false;
-            hideTimer();
-            if (timerInterval) clearInterval(timerInterval);
-            if (sessionTimer) clearTimeout(sessionTimer);
-          }
-        } else if (iframeUrl.indexOf('exec') !== -1 && iframeUrl.indexOf('login') === -1) {
-          document.getElementById('installOverlay').classList.remove('show');
-          if (!isLoggedIn) {
-            isLoggedIn = true;
-            showTimer();
-            resetSessionTimer();
-            startTimerInterval();
-          }
-        }
-      } catch(e) {
-        // Cross-origin - biarkan
-      }
-    }
-    
-    // ============================================================
-    // LISTEN MESSAGE FROM IFRAME
-    // ============================================================
-    window.addEventListener('message', function(event) {
-      if (event.data && event.data.type === 'REQUEST_TIMER') {
-        sendTimerToIframe(timeLeft);
-      }
-      if (event.data && event.data.type === 'LOGIN_SUCCESS') {
-        isLoggedIn = true;
-        document.getElementById('installOverlay').classList.remove('show');
-        showTimer();
-        resetSessionTimer();
-        startTimerInterval();
-      }
-      if (event.data && event.data.type === 'LOGOUT') {
-        isLoggedIn = false;
-        hideTimer();
-        if (timerInterval) clearInterval(timerInterval);
-        if (sessionTimer) clearTimeout(sessionTimer);
-        setTimeout(function() {
-          document.getElementById('installOverlay').classList.add('show');
-        }, 1000);
-      }
-    });
-    
-    // ============================================================
-    // PWA - INSTALLATION
-    // ============================================================
-    var deferredPrompt = null;
-    
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js')
-          .then(function(reg) {
-            console.log('✅ Service Worker registered:', reg.scope);
-          })
-          .catch(function(err) {
-            console.log('❌ Service Worker registration failed:', err);
-          });
+        deferredPrompt = null;
       });
+    } else {
+      alert('Instal aplikasi hanya tersedia di browser yang mendukung PWA.\nGunakan Chrome atau Edge.');
     }
-    
-    window.addEventListener('beforeinstallprompt', function(e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installOverlay').classList.add('show');
-      console.log('📲 Install prompt available');
-    });
-    
-    window.addEventListener('appinstalled', function() {
-      document.getElementById('installOverlay').classList.remove('show');
-      console.log('✅ App installed successfully');
-      showToast('✅ Aplikasi berhasil diinstal!', 'success');
-    });
-    
-    function installApp() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(function(choiceResult) {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('✅ User accepted the install prompt');
-            document.getElementById('installOverlay').classList.remove('show');
-          } else {
-            console.log('❌ User dismissed the install prompt');
-          }
-          deferredPrompt = null;
-        });
-      } else {
-        if (navigator.userAgent.indexOf('iPhone') !== -1 || navigator.userAgent.indexOf('iPad') !== -1) {
-          document.getElementById('iosPrompt').style.display = 'block';
-        } else {
-          showToast('💡 Gunakan Chrome atau Edge untuk instalasi', 'info');
-        }
-      }
-    }
-    
-    // ============================================================
-    // HIDE SPLASH & LOAD APP
-    // ============================================================
-    window.addEventListener('load', function() {
-      document.getElementById('loadingOverlay').classList.add('active');
-      
-      setTimeout(function() {
-        document.getElementById('splashScreen').classList.add('hidden');
-        
-        var mainApp = document.getElementById('mainApp');
-        mainApp.style.display = 'block';
-        setTimeout(function() {
-          mainApp.classList.add('visible');
-        }, 100);
-        
-        var iframe = document.getElementById('appIframe');
-        iframe.addEventListener('load', handleIframeLoad);
-        
-        loginCheckInterval = setInterval(checkLoginState, 2000);
-        
-        setTimeout(function() {
-          var overlay = document.getElementById('loadingOverlay');
-          if (overlay.classList.contains('active')) {
-            overlay.classList.remove('active');
-            document.getElementById('installOverlay').classList.add('show');
-          }
-        }, 15000);
-        
-        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-          handleIframeLoad();
-        }
-        
-      }, 3000);
-    });
-    
-    // ============================================================
-    // TOAST
-    // ============================================================
-    function showToast(message, type) {
-      var toast = document.createElement('div');
-      var colors = {
-        success: '#28a745',
-        error: '#dc3545',
-        warning: '#ffc107',
-        info: '#17a2b8'
-      };
-      
-      var isInstallVisible = document.getElementById('installOverlay').classList.contains('show');
-      
-      toast.style.cssText = 
-        'position: fixed;' +
-        'bottom: ' + (isInstallVisible ? '100px' : '30px') + ';' +
-        'left: 50%;' +
-        'transform: translateX(-50%);' +
-        'padding: 14px 28px;' +
-        'border-radius: 12px;' +
-        'color: ' + (type === 'warning' ? '#333' : 'white') + ';' +
-        'font-weight: 600;' +
-        'z-index: 9999;' +
-        'box-shadow: 0 4px 20px rgba(0,0,0,0.3);' +
-        'animation: slideUp 0.5s ease;' +
-        'max-width: 90%;' +
-        'background: ' + (colors[type] || colors.info) + ';' +
-        'font-family: Inter, sans-serif;' +
-        'text-align: center;';
-      
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      
-      setTimeout(function() {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.5s ease';
-        setTimeout(function() { toast.remove(); }, 500);
-      }, 5000);
-    }
-    
-    // ============================================================
-    // KEYBOARD SHORTCUTS
-    // ============================================================
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
-        e.preventDefault();
-        if (confirm('Yakin ingin logout?')) {
-          var iframe = document.getElementById('appIframe');
-          iframe.src = iframe.src;
-          isLoggedIn = false;
-          hideTimer();
-          if (timerInterval) clearInterval(timerInterval);
-          if (sessionTimer) clearTimeout(sessionTimer);
-          setTimeout(function() {
-            document.getElementById('installOverlay').classList.add('show');
-          }, 1000);
-          showToast('👋 Anda telah logout', 'info');
-        }
-      }
-    });
-    
-    console.log('🚀 SIAP JALAN PWA v2.0 loaded!');
-    console.log('⏱️ Auto logout: 30 menit tidak ada aktivitas');
-    console.log('⌨️ Shortcut: Ctrl+Shift+L untuk logout');
-    console.log('📱 Klik "Instal SiapJalan" di bawah untuk install PWA');
-  </script>
+  }
+  
+  // ============================================================
+  // BUTTON LOADING STATE
+  // ============================================================
+  document.getElementById('openAppBtn').addEventListener('click', function(e) {
+    this.classList.add('loading');
+    setTimeout(function() {
+      // Reset setelah 3 detik
+      document.getElementById('openAppBtn').classList.remove('loading');
+    }, 3000);
+  });
+  
+  // ============================================================
+  // REGISTER SERVICE WORKER
+  // ============================================================
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(reg) {
+        console.log('✅ Service Worker terdaftar!', reg);
+      })
+      .catch(function(err) {
+        console.log('❌ Gagal mendaftar Service Worker:', err);
+      });
+  }
+  
+  // ============================================================
+  // OFFLINE CHECK
+  // ============================================================
+  window.addEventListener('online', function() {
+    console.log('🌐 Kembali online');
+  });
+  
+  window.addEventListener('offline', function() {
+    console.log('📴 Offline mode');
+  });
+  
+  console.log('🚀 SIAP JALAN PWA siap digunakan!');
+</script>
+
+<!-- Font Awesome (opsional) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 </body>
 </html>
