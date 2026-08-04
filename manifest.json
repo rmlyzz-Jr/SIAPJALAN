@@ -1,6 +1,6 @@
 {
-  "name": "SIAP JALAN - Sistem Aduan & Penanganan Jalan",
-  "short_name": "SIAP JALAN",
+  "name": "SIAP JALAN",
+  "short_name": "SiapJalan",
   "description": "Sistem Integrasi Aduan dan Penanganan Jalan Binamarga",
   "start_url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec",
   "display": "standalone",
@@ -59,10 +59,16 @@
       "short_name": "Daftar",
       "description": "Lihat daftar aduan",
       "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec"
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Lihat statistik",
+      "url": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/exec"
     }
   ],
   "display_override": ["standalone", "minimal-ui"],
   "prefer_related_applications": false,
   "related_applications": [],
-  "scope": "https://script.google.com/macros/s/AKfycbxaPxtTpQgWpwfMPKLCR15QiCEqL4j6UT0qegDi46EaOWft7jLbcA8Xyg5Z4iSrv84N7Q/"
+  "scope": "/"
 }
