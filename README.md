@@ -16,7 +16,7 @@ SIAP JALAN adalah sistem untuk mengelola aduan dan penanganan jalan. Aplikasi in
 
 ## 🔗 URL Aplikasi
 
-**Akses langsung:** [SIAP JALAN](https://script.google.com/macros/s/AKfycbz5Pn7HXfpr_mMt6w3mTGKmrgxOhRx_dsxOznrY11koXkiys6kGoMsvz_AV6ZmdNAEQXg/exec)
+**Akses langsung:** [SIAP JALAN](https://script.google.com/macros/s/AKfycbyF41feWP7GMQAxvIc-R2ai7iw59IbB4Nt7JpF1uddtLhjLWiA-qOtdCC4wu4y16-pTjw/exec)
 
 **PWA Launcher:** `https://[username].github.io/siapjalan-pwa/`
 
