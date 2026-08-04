@@ -156,9 +156,90 @@
       margin-top: 5px;
     }
     
-    /* ============================================================
-       LOADING OVERLAY
-    ============================================================ */
+    .session-info {
+      font-size: 11px;
+      color: #999;
+      margin-top: 10px;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 12px;
+    }
+    
+    .session-info span {
+      color: #0D2F5F;
+      font-weight: 600;
+    }
+    
+    /* SESSION TIMEOUT WARNING */
+    #sessionWarning {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff3cd;
+      color: #856404;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      z-index: 1000;
+      border-left: 5px solid #ffc107;
+      animation: slideUp 0.4s ease;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(30px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    
+    #sessionWarning .warning-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    #sessionWarning .warning-text {
+      font-size: 13px;
+    }
+    
+    #sessionWarning .warning-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    
+    #sessionWarning .warning-actions button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #sessionWarning .btn-extend {
+      background: #0D2F5F;
+      color: white;
+    }
+    
+    #sessionWarning .btn-extend:hover {
+      background: #1a4a7a;
+    }
+    
+    #sessionWarning .btn-logout-now {
+      background: #dc3545;
+      color: white;
+    }
+    
+    #sessionWarning .btn-logout-now:hover {
+      background: #c82333;
+    }
+    
+    /* LOADING OVERLAY */
     #loadingOverlay {
       display: none;
       position: fixed;
@@ -194,9 +275,6 @@
       opacity: 0.8;
     }
     
-    /* ============================================================
-       RESPONSIVE
-    ============================================================ */
     @media (max-width: 480px) {
       .container {
         padding: 30px 20px 25px;
@@ -208,22 +286,36 @@
         width: 80px;
         height: 80px;
       }
+      #sessionWarning {
+        bottom: 15px;
+        padding: 14px 18px;
+      }
+      #sessionWarning .warning-actions {
+        flex-direction: column;
+        gap: 6px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ============================================================
-       LOADING OVERLAY
-  ============================================================ -->
+  <!-- SESSION WARNING -->
+  <div id="sessionWarning">
+    <div class="warning-title">⏰ Sesi Akan Berakhir</div>
+    <div class="warning-text" id="warningText">Anda akan logout dalam 5 menit karena tidak ada aktivitas.</div>
+    <div class="warning-actions">
+      <button class="btn-extend" onclick="extendSession()">Lanjutkan Sesi</button>
+      <button class="btn-logout-now" onclick="logoutNow()">Logout Sekarang</button>
+    </div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
   <div id="loadingOverlay">
     <div class="spinner"></div>
     <p>Membuka aplikasi...</p>
   </div>
 
-  <!-- ============================================================
-       MAIN CARD
-  ============================================================ -->
+  <!-- MAIN CARD -->
   <div class="container">
     <div class="logo">
       <img src="https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png" alt="Logo SIAP JALAN">
@@ -259,48 +351,194 @@
       </span>
     </div>
     
-    <div style="margin-top:12px;font-size:11px;color:#ced4da;">
-      v2.3.0 &bull; 
+    <div class="session-info">
+      <i class="fas fa-clock" style="color:#F5B400;"></i>
+      Sesi berakhir setelah <span>30 menit</span> tidak aktif
+    </div>
+    
+    <div style="margin-top:8px;font-size:11px;color:#ced4da;">
+      v2.5.0 &bull; 
       <a href="#" onclick="installApp();return false;" style="color:#0D2F5F;font-weight:600;text-decoration:underline;">Instal</a>
     </div>
   </div>
 
   <script>
     // ============================================================
-    // KONFIGURASI
+    // KONFIGURASI - URL WEB APP BARU
     // ============================================================
     const APP_URL = 'https://script.google.com/macros/s/AKfycbz5Pn7HXfpr_mMt6w3mTGKmrgxOhRx_dsxOznrY11koXkiys6kGoMsvz_AV6ZmdNAEQXg/exec';
+    const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 menit
+    const WARNING_TIME = 5 * 60 * 1000; // 5 menit sebelum logout
     
     // ============================================================
-    // ELEMEN
+    // SESSION MANAGEMENT
     // ============================================================
-    const openBtn = document.getElementById('openAppBtn');
-    const installBtn = document.getElementById('installBtn');
-    const installStatus = document.getElementById('installStatus');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-
+    let sessionTimer = null;
+    let warningTimer = null;
+    let isWarningShown = false;
+    let lastActivity = Date.now();
+    
+    function resetSessionTimer() {
+      lastActivity = Date.now();
+      
+      if (sessionTimer) {
+        clearTimeout(sessionTimer);
+        sessionTimer = null;
+      }
+      if (warningTimer) {
+        clearTimeout(warningTimer);
+        warningTimer = null;
+      }
+      
+      hideWarning();
+      
+      warningTimer = setTimeout(function() {
+        showWarning();
+      }, SESSION_TIMEOUT - WARNING_TIME);
+      
+      sessionTimer = setTimeout(function() {
+        performLogout();
+      }, SESSION_TIMEOUT);
+      
+      console.log('🔄 Session timer direset. Logout dalam ' + (SESSION_TIMEOUT/60000) + ' menit');
+    }
+    
+    function showWarning() {
+      if (isWarningShown) return;
+      isWarningShown = true;
+      
+      const warning = document.getElementById('sessionWarning');
+      const text = document.getElementById('warningText');
+      
+      const timeLeft = Math.ceil((SESSION_TIMEOUT - (Date.now() - lastActivity)) / 60000);
+      text.textContent = 'Anda akan logout dalam ' + timeLeft + ' menit karena tidak ada aktivitas.';
+      
+      warning.style.display = 'block';
+      
+      let countdown = timeLeft;
+      const countdownInterval = setInterval(function() {
+        countdown--;
+        if (countdown > 0) {
+          text.textContent = 'Anda akan logout dalam ' + countdown + ' menit karena tidak ada aktivitas.';
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 60000);
+      
+      warning._countdownInterval = countdownInterval;
+    }
+    
+    function hideWarning() {
+      const warning = document.getElementById('sessionWarning');
+      if (warning._countdownInterval) {
+        clearInterval(warning._countdownInterval);
+        warning._countdownInterval = null;
+      }
+      warning.style.display = 'none';
+      isWarningShown = false;
+    }
+    
+    function extendSession() {
+      resetSessionTimer();
+      showToast('✅ Sesi diperpanjang!');
+    }
+    
+    function logoutNow() {
+      hideWarning();
+      performLogout();
+    }
+    
+    function performLogout() {
+      console.log('🚪 Logout otomatis karena tidak aktif');
+      
+      if (sessionTimer) {
+        clearTimeout(sessionTimer);
+        sessionTimer = null;
+      }
+      if (warningTimer) {
+        clearTimeout(warningTimer);
+        warningTimer = null;
+      }
+      hideWarning();
+      
+      loadingOverlay.style.display = 'flex';
+      loadingOverlay.querySelector('p').textContent = 'Logout...';
+      
+      window.location.href = APP_URL + '?logout=true';
+      
+      setTimeout(function() {
+        loadingOverlay.style.display = 'none';
+        window.location.href = APP_URL;
+      }, 3000);
+    }
+    
     // ============================================================
-    // CEK APAKAH SUDAH TERINSTAL (STANDALONE)
+    // DETEKSI AKTIVITAS USER
     // ============================================================
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      installStatus.style.display = 'inline-block';
-      installBtn.style.display = 'none';
+    function handleUserActivity() {
+      resetSessionTimer();
+    }
+    
+    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart', 'touchmove'];
+    events.forEach(function(eventName) {
+      document.addEventListener(eventName, handleUserActivity);
+    });
+    
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        resetSessionTimer();
+      }
+    });
+    
+    window.addEventListener('online', function() {
+      resetSessionTimer();
+    });
+    
+    // ============================================================
+    // TOAST NOTIFICATION
+    // ============================================================
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 14px;
+        z-index: 9999;
+        max-width: 90%;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        animation: fadeIn 0.3s ease;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3000);
     }
 
     // ============================================================
-    // BUKA APLIKASI - MENGGUNAKAN WINDOW.OPEN
+    // BUKA APLIKASI
     // ============================================================
+    const openBtn = document.getElementById('openAppBtn');
+    
     openBtn.addEventListener('click', function() {
-      // Tampilkan loading
       loadingOverlay.style.display = 'flex';
+      loadingOverlay.querySelector('p').textContent = 'Membuka aplikasi...';
       
-      // Buka aplikasi di tab yang sama (navigasi)
+      resetSessionTimer();
+      
       window.location.href = APP_URL;
       
-      // Fallback: jika tidak berpindah dalam 3 detik, buka di tab baru
       setTimeout(function() {
         loadingOverlay.style.display = 'none';
-        // Cek apakah masih di halaman yang sama
         if (window.location.href.indexOf('siapjalan-pwa') !== -1) {
           window.open(APP_URL, '_blank');
         }
@@ -311,6 +549,13 @@
     // INSTALL APP (PWA)
     // ============================================================
     let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    const installStatus = document.getElementById('installStatus');
+    
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      installStatus.style.display = 'inline-block';
+      installBtn.style.display = 'none';
+    }
     
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
@@ -333,7 +578,6 @@
           deferredPrompt = null;
         });
       } else {
-        // Petunjuk instalasi manual
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         let msg = '📱 Cara instal SIAP JALAN:\n\n';
         if (isMobile) {
@@ -366,13 +610,13 @@
     }
 
     // ============================================================
-    // OFFLINE DETECTION
+    // START SESSION TIMER
     // ============================================================
-    window.addEventListener('offline', function() {
-      alert('📴 Anda sedang offline. Periksa koneksi internet.');
-    });
-
-    console.log('🚀 SIAP JALAN PWA v2.3 siap digunakan!');
+    resetSessionTimer();
+    
+    console.log('🚀 SIAP JALAN PWA v2.5 dengan Auto-Logout siap digunakan!');
+    console.log('⏰ Session timeout: ' + (SESSION_TIMEOUT/60000) + ' menit');
+    console.log('🔗 URL Web App: ' + APP_URL);
   </script>
 
   <!-- Font Awesome -->
