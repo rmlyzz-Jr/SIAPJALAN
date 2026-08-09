@@ -16,7 +16,7 @@ let isAppInstalled = false;
 // SPREADSHEET CONFIGURATION (Google Apps Script Backend URL)
 // ============================================================
 // ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoRhO_tH5SdQRbIfbIdi61rYou5xx49mXCBZBRGofrn64dEpz07thhBHq-A2SBw_or7Q/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhd4ye8XkTU3t3k1jUu0gRNhz8kCo6NdBcHQoIbqHuQG5l4YW8QmVyYmhUoENUwqQnwQ/exec';
 
 // ============================================================
 // PWA - INSTALL APP HANDLING
