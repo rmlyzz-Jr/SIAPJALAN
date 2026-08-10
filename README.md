@@ -1,28 +1,25 @@
-# 🚧 SIAP JALAN - PWA
+# 🚀 SIAP JALAN - Sistem Integrasi Aduan dan Penanganan Jalan
 
-> Sistem Integrasi Aduan dan Penanganan Jalan Binamarga
+[![PWA](https://img.shields.io/badge/PWA-Enabled-blue)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## 📱 Tentang Aplikasi
+**SIAP JALAN** adalah aplikasi berbasis **Progressive Web App (PWA)** untuk mengelola aduan dan penanganan jalan di lingkungan Binamarga. Aplikasi ini dapat diinstal di smartphone Android dan iOS.
 
-SIAP JALAN adalah sistem untuk mengelola aduan dan penanganan jalan. Aplikasi ini adalah **PWA (Progressive Web App)** yang membungkus aplikasi Google Apps Script.
+## ✨ Fitur Utama
 
-### Fitur
-- ✅ Input dan manajemen aduan
-- 📊 Dashboard statistik
-- 📋 Rekap pekerjaan
-- 👤 Manajemen user
-- 📱 Bisa diinstall sebagai aplikasi di HP
-- ⏰ Auto-logout 30 menit tidak aktif
+- 🔐 **Login Aman** dengan autentikasi pengguna
+- 📝 **Input Aduan** dengan upload gambar (maksimal 5)
+- 📋 **Daftar Aduan** dengan filter dan pencarian
+- 📊 **Dashboard** dengan grafik dan statistik
+- 🏆 **Peringkat Tim** berdasarkan kinerja
+- 📈 **Rekap Pekerjaan** dengan filter jenis pengadaan
+- 👥 **Master User** untuk manajemen akun
+- 📱 **Installable** sebagai aplikasi di HP
+- 🔔 **Notifikasi Push** (opsional)
+- 📴 **Offline Support** dengan Service Worker
 
-## 🔗 URL Aplikasi
+## 🔗 Live Demo
 
-**Akses langsung:** [SIAP JALAN](https://script.google.com/macros/s/AKfycbyV_Gkpl-GFv0NBi589yGUHrndFHBres2VSjPPiRI6PvjQH_JtGFmAR9v07d18EOOehUA/exec)
+Akses aplikasi melalui: [SIAP JALAN Web App](https://script.google.com/macros/s/AKfycbyV_Gkpl-GFv0NBi589yGUHrndFHBres2VSjPPiRI6PvjQH_JtGFmAR9v07d18EOOehUA/exec)
 
-**PWA Launcher:** `https://[username].github.io/siapjalan-pwa/`
-
-## 🚀 Deploy ke GitHub
-
-### 1. Clone atau Download Repository
-```bash
-git clone https://github.com/[username]/siapjalan-pwa.git
-cd siapjalan-pwa
+## 📂 Struktur File
