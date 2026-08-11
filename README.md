@@ -20,6 +20,6 @@
 
 ## 🔗 Live Demo
 
-Akses aplikasi melalui: [SIAP JALAN Web App](https://script.google.com/macros/s/AKfycbyV_Gkpl-GFv0NBi589yGUHrndFHBres2VSjPPiRI6PvjQH_JtGFmAR9v07d18EOOehUA/exec)
+Akses aplikasi melalui: [SIAP JALAN Web App](https://script.google.com/macros/s/AKfycbyR0kiRH6a4MvHEABDyP9hvrSIoI7V34TmG4Ys5MaZVz_7bMY4zIwqoyCz6Do324Suq/exec)
 
 ## 📂 Struktur File
