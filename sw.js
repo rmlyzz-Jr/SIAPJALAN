@@ -1,16 +1,15 @@
 // ============================================================
-// SIAP JALAN - Service Worker v2.6.1
+// SIAP JALAN - Service Worker v2.6.2
 // ============================================================
 
-const CACHE_NAME = 'siapjalan-v2.6.1';
+const CACHE_NAME = 'siapjalan-v2.6.2';
 const APP_URL = 'https://script.google.com/macros/s/AKfycbx-7GpV_Og_qMCGigS9XAUjQm6y_DrwMYYJ4l8QDzvvhOerzwm5iWhiyNQZbbZdBpLpbg/exec';
 
 // Daftar file yang akan di-cache
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/app.html',
-  '/manifest.json',
+  './',
+  './index.html',
+  './manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://cdn.jsdelivr.net/npm/chart.js',
   'https://i.ibb.co.com/XZTqS2bX/LOGO-SJ.png'
@@ -20,7 +19,7 @@ const urlsToCache = [
 // INSTALL - Cache semua file
 // ============================================================
 self.addEventListener('install', function(event) {
-  console.log('📦 Instal Service Worker SIAP JALAN v2.6.1');
+  console.log('📦 Instal Service Worker SIAP JALAN v2.6.2');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
@@ -111,7 +110,7 @@ self.addEventListener('fetch', function(event) {
   // ============================================================
   if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match('/index.html')
+      caches.match('./index.html')
         .then(function(cached) {
           if (cached) {
             console.log('📄 Navigasi dari cache');
@@ -122,7 +121,7 @@ self.addEventListener('fetch', function(event) {
             if (response.ok) {
               const clone = response.clone();
               caches.open(CACHE_NAME).then(function(cache) {
-                cache.put('/index.html', clone);
+                cache.put('./index.html', clone);
               });
             }
             return response;
@@ -131,7 +130,7 @@ self.addEventListener('fetch', function(event) {
         .catch(function() {
           // Jika offline dan tidak ada cache, berikan halaman offline
           return new Response(
-            '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Offline - SIAP JALAN</title><style>body{font-family:sans-serif;text-align:center;padding:50px;background:#0D2F5F;color:white;}h1{color:#F5B400;}a{color:#F5B400;}</style></head><body><h1>📴 Offline</h1><p>Koneksi internet terputus. Silakan periksa koneksi Anda.</p><p style="margin-top:20px;font-size:14px;opacity:0.7;">SIAP JALAN v2.6.1</p></body></html>',
+            '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Offline - SIAP JALAN</title><style>body{font-family:sans-serif;text-align:center;padding:50px;background:#0D2F5F;color:white;}h1{color:#F5B400;}a{color:#F5B400;}</style></head><body><h1>📴 Offline</h1><p>Koneksi internet terputus. Silakan periksa koneksi Anda.</p><p style="margin-top:20px;font-size:14px;opacity:0.7;">SIAP JALAN v2.6.2</p></body></html>',
             { headers: { 'Content-Type': 'text/html' } }
           );
         })
@@ -164,7 +163,7 @@ self.addEventListener('fetch', function(event) {
       })
       .catch(function() {
         // Jika error, coba kembalikan dari cache untuk asset lain
-        return caches.match('/index.html');
+        return caches.match('./index.html');
       })
   );
 });
@@ -229,4 +228,4 @@ self.addEventListener('notificationclick', function(event) {
   );
 });
 
-console.log('🔔 Service Worker SIAP JALAN v2.6.1 siap!');
+console.log('🔔 Service Worker SIAP JALAN v2.6.2 siap!');
