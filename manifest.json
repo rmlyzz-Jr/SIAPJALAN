@@ -2,7 +2,7 @@
   "name": "SIAP JALAN",
   "short_name": "SiapJalan",
   "description": "Sistem Integrasi Aduan dan Penanganan Jalan Binamarga",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0D2F5F",
@@ -43,7 +43,7 @@
       "src": "https://i.ibb.co.com/ymJxJr64/Chat-GPT-Image-Jul-5-2026-01-13-27-AM.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "platform": "wide",
+      "form_factor": "wide",
       "label": "Dashboard SIAP JALAN"
     }
   ],
@@ -52,13 +52,11 @@
       "name": "Buka Aplikasi",
       "short_name": "Buka",
       "description": "Buka aplikasi SIAP JALAN",
-      "url": "/"
+      "url": "./"
     }
   ],
   "display_override": ["standalone", "minimal-ui"],
   "prefer_related_applications": false,
   "related_applications": [],
-  "scope": "/"
+  "scope": "./"
 }
-
-
