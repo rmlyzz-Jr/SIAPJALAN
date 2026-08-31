@@ -19,7 +19,7 @@ let grafikChart = null;
 // SPREADSHEET CONFIGURATION (Google Apps Script Backend URL)
 // ============================================================
 // ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-rFNbr067M2Zxmpp-VakzOoFnY5UnaNIZNCmJ_NfKVK2PkC6RwVbs5Nr61Yj3hbda/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyThEvJRhHAyB_3pBqcfFUoG7X_5KkV2gZpicX657rIn4VndurcDb-FY88uGTWpWYP3Qw/exec';
 
 // ============================================================
 // HELPER FUNCTIONS
