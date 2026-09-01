@@ -3,7 +3,7 @@
 // ============================================================
 
 const CACHE_NAME = 'siapjalan-v2.6.2';
-const APP_URL = 'https://script.google.com/macros/s/AKfycbw2nrGvbBJEcgQ1lDFXqNLUePDlbAk_u-cxRw9sOHPeoV2kBGWIsa3KalgcqRVayUNE4A/exec';
+const APP_URL = 'https://script.google.com/macros/s/AKfycbxtu28y_u5YVWQ08NHofBRYMHSv8Rt9EuE7JigSSSOail0zVY614lL_FRBAA06Q56GgTg/exec';
 
 // Daftar file yang akan di-cache
 const urlsToCache = [
