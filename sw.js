@@ -2,8 +2,8 @@
 // SIAP JALAN - Service Worker v2.6.2
 // ============================================================
 
-const CACHE_NAME = 'siapjalan-v2.6.3';
-const APP_URL = 'https://script.google.com/macros/s/AKfycbzQKQcPPBoCLPlzUF9ySr0kYCa0RGoB6Z04uAzTRLNGZcdXu2b6KSqrmEvCrqElEAzSGA/exec';
+const CACHE_NAME = 'SIAPJALAN-v3.7';
+const APP_URL = 'https://script.google.com/macros/s/AKfycbxfeEVtUO35TzQMjzEVETeUHJuEb2aFVBadO6Nn7tzrwBXK0ddtSCDF6P__TuXSBSVTYQ/exec';
 
 // Daftar file yang akan di-cache
 const urlsToCache = [
